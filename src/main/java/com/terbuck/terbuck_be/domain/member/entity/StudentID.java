@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class StudentID {
 
-    private Long studentNumber;
+    private String studentNumber;
 
     private String idCardImage;
 
-    public StudentID(Long studentNumber, String idCardImage) {
+    public StudentID(String studentNumber, String idCardImage) {
         this.studentNumber = studentNumber;
         this.idCardImage = idCardImage;
     }
