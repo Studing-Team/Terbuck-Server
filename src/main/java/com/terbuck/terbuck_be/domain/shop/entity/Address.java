@@ -13,7 +13,5 @@ public abstract class Address {
 
     private String buildingNumber;
 
-    private String detail;
-
     private String etc;
 }
