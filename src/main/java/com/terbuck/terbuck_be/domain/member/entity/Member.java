@@ -33,6 +33,15 @@ public class Member {
     @Embedded
     private StudentID studentID;
 
-    private Boolean isSignedUp;
+    public Member(Long socialId, SocialType socialType, University university, Policy policy, String refreshToken) {
+        this.socialId = socialId;
+        this.socialType = socialType;
+        this.university = university;
+        this.policy = policy;
+        this.refreshToken = refreshToken;
+    }
 
+    public void changeStudentID(StudentID studentID) {
+        this.studentID = studentID;
+    }
 }
