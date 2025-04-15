@@ -8,9 +8,14 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public abstract class StudentID {
+public class StudentID {
 
     private Long studentNumber;
 
     private String idCardImage;
+
+    public StudentID(Long studentNumber, String idCardImage) {
+        this.studentNumber = studentNumber;
+        this.idCardImage = idCardImage;
+    }
 }

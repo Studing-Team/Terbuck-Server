@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Embeddable
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public abstract class Policy {
+public class Policy {
 
     private Boolean agreedToService;
 
