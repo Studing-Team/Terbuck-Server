@@ -21,7 +21,7 @@ public class Shop {
 
     private String name;
 
-    @Embedded
+    @Enumerated(EnumType.STRING)
     private University university;
 
     @Enumerated(EnumType.STRING)
