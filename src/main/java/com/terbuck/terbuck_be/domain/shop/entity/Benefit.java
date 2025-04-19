@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -17,11 +20,12 @@ public class Benefit {
 
     private String name;
 
-    private String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Detail> detailList = new ArrayList<>();
 
     public void changeShop(Shop shop) {
         this.shop = shop;
