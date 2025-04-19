@@ -32,16 +32,12 @@ public class Shop {
 
     private String image;
 
-    private String introduction;
-
-    private String detail;
-
     private String shopLink;
 
     @Embedded
     private Location location;
 
-    @OneToMany(mappedBy = "shop")
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benefit> benefitList = new ArrayList<>();
 
 }
