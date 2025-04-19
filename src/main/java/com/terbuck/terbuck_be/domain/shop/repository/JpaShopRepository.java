@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.shop.repository;
 
+import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,19 @@ public class JpaShopRepository implements ShopRepository {
     @Override
     public List<Shop> findAll() {
         return em.createQuery(
-                "select s from Shop s"
-                , Shop.class
-        ).getResultList();
+                        "select s from Shop s "
+                        , Shop.class
+                )
+                .getResultList();
+    }
+
+    @Override
+    public List<Shop> findAllByUniv(University university) {
+        return em.createQuery(
+                        "select s from Shop s where s.university =: univ"
+                        , Shop.class
+                ).setParameter("univ", university)
+                .getResultList();
     }
 
     @Override
