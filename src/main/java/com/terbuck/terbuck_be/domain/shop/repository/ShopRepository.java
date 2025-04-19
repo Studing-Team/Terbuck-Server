@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ShopRepository {
 
+    void save(Shop shop);
+
     List<Shop> findAll();
 
     Shop findById(Long id);

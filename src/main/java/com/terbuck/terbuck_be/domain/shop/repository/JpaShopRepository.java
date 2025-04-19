@@ -14,6 +14,11 @@ public class JpaShopRepository implements ShopRepository {
     private final EntityManager em;
 
     @Override
+    public void save(Shop shop) {
+        em.persist(shop);
+    }
+
+    @Override
     public List<Shop> findAll() {
         return em.createQuery(
                 "select s from Shop s"
