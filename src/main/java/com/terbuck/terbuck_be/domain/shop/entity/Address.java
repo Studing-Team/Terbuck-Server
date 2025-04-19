@@ -27,4 +27,19 @@ public class Address {
         this.buildingNumber = buildingNumber;
         this.etc = etc;
     }
+
+    public static String StringOf(Address address) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(address.getRegion())
+                .append(" ")
+                .append(address.getCity())
+                .append(" ")
+                .append(address.getRoad())
+                .append(" ")
+                .append(address.getBuildingNumber())
+                .append(" ")
+                .append(address.getEtc());
+
+        return sb.toString();
+    }
 }
