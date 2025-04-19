@@ -49,7 +49,7 @@ class JpaMemberRepositoryTest {
         Long savedMemberId = jpaMemberRepository.signUp(memberA);
 
         //when
-        StudentID studentID = new StudentID("19011702", "imageURL");
+        StudentID studentID = new StudentID(false, "student1", "19011702", "imageURL");
         jpaMemberRepository.changeStudentID(savedMemberId, studentID);
 
         //then
