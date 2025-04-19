@@ -19,4 +19,12 @@ public class Address {
     private String buildingNumber;
 
     private String etc;
+
+    public Address(String region, String city, String road, String buildingNumber, String etc) {
+        this.region = region;
+        this.city = city;
+        this.road = road;
+        this.buildingNumber = buildingNumber;
+        this.etc = etc;
+    }
 }

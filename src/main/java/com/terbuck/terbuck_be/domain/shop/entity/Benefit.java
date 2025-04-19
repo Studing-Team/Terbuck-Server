@@ -27,6 +27,10 @@ public class Benefit {
     @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Detail> detailList = new ArrayList<>();
 
+    public Benefit(String name) {
+        this.name = name;
+    }
+
     public void changeShop(Shop shop) {
         this.shop = shop;
         shop.getBenefitList().add(this);

@@ -25,4 +25,7 @@ public class Detail {
         benefit.getDetailList().add(this);
     }
 
+    public Detail(String description) {
+        this.description = description;
+    }
 }

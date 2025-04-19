@@ -40,4 +40,13 @@ public class Shop {
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benefit> benefitList = new ArrayList<>();
 
+    public Shop(String name, University university, ShopCategory category, Address address, String image, String shopLink, Location location) {
+        this.name = name;
+        this.university = university;
+        this.category = category;
+        this.address = address;
+        this.image = image;
+        this.shopLink = shopLink;
+        this.location = location;
+    }
 }
