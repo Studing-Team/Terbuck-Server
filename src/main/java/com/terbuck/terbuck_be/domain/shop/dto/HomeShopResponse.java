@@ -1,6 +1,5 @@
 package com.terbuck.terbuck_be.domain.shop.dto;
 
-import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import lombok.Data;
 
 import java.util.ArrayList;

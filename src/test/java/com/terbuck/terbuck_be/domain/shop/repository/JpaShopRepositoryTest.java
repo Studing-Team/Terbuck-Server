@@ -56,7 +56,6 @@ class JpaShopRepositoryTest {
         for (Shop shop1 : all) {
             System.out.println("shop1.getName() = " + shop1.getName());
         }
-        ;
 
         assertThat(jpaShopRepository.findAll().size()).isEqualTo(1);
 
