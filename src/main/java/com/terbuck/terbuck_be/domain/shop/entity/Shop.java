@@ -30,7 +30,7 @@ public class Shop {
     @Embedded
     private Address address;
 
-    private String image;
+    private String thumbnailImage;
 
     private String shopLink;
 
@@ -40,12 +40,16 @@ public class Shop {
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benefit> benefitList = new ArrayList<>();
 
-    public Shop(String name, University university, ShopCategory category, Address address, String image, String shopLink, Location location) {
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> imageList = new ArrayList<>();
+
+    public Shop(String name, University university, ShopCategory category, Address address, String thumbnailImage, String shopLink, Location location) {
+
         this.name = name;
         this.university = university;
         this.category = category;
         this.address = address;
-        this.image = image;
+        this.thumbnailImage = thumbnailImage;
         this.shopLink = shopLink;
         this.location = location;
     }
