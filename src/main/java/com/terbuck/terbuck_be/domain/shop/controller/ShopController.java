@@ -6,15 +6,13 @@ import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
+import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
 import com.terbuck.terbuck_be.domain.shop.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -44,5 +42,14 @@ public class ShopController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.MAP_SHOP_GET_SUCCESS, shopListResponse));
+    }
+
+    @GetMapping("/{shop_id}")
+    public ResponseEntity<SuccessStatusResponse<ShopResponse>> getShop(@PathVariable(name = "shop_id") Long shopId) {
+        ShopResponse shopResponse = shopService.getShop(shopId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.ID_SHOP_GET_SUCCESS, shopResponse));
     }
 }

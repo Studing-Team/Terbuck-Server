@@ -4,6 +4,7 @@ import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
+import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.repository.JpaShopRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +47,8 @@ public class ShopService {
         return shopListResponse;
     }
 
+    public ShopResponse getShop(Long shopId) {
+        Shop shop = repository.findById(shopId);
+        return ShopResponse.of(shop);
+    }
 }
