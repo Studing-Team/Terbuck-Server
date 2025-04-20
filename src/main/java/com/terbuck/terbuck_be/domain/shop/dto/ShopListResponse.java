@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class HomeShopResponse {
+public class ShopListResponse<T> {
 
-    private List<HomeShopDto> list = new ArrayList<>();
+    private List<T> list = new ArrayList<>();
 }

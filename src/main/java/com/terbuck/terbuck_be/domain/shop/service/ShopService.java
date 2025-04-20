@@ -2,7 +2,8 @@ package com.terbuck.terbuck_be.domain.shop.service;
 
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
-import com.terbuck.terbuck_be.domain.shop.dto.HomeShopResponse;
+import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
+import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.repository.JpaShopRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,29 @@ public class ShopService {
     private final JpaShopRepository repository;
 
     @Transactional
-    public HomeShopResponse getHomeShop(University university) {
-        HomeShopResponse homeShopResponse = new HomeShopResponse();
+    public ShopListResponse<HomeShopDto> getHomeShop(University university) {
+        ShopListResponse<HomeShopDto> homeShopListResponse = new ShopListResponse<>();
 
         List<Shop> shopsByUniv = repository.findAllByUniv(university);
         for (Shop shop : shopsByUniv) {
             HomeShopDto homeShopDto = HomeShopDto.of(shop);
-            homeShopResponse.getList().add(homeShopDto);
+            homeShopListResponse.getList().add(homeShopDto);
         }
 
-        return homeShopResponse;
+        return homeShopListResponse;
     }
+
+    @Transactional
+    public ShopListResponse<MapShopDto> getMapShop(University university) {
+        ShopListResponse<MapShopDto> shopListResponse = new ShopListResponse<>();
+
+        List<Shop> shopsByUniv = repository.findAllByUniv(university);
+        for (Shop shop : shopsByUniv) {
+            MapShopDto mapShopDto = MapShopDto.of(shop);
+            shopListResponse.getList().add(mapShopDto);
+        }
+
+        return shopListResponse;
+    }
+
 }
