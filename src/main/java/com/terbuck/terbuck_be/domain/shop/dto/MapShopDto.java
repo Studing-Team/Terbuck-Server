@@ -11,16 +11,16 @@ public class MapShopDto {
 
     private Long shopId;
     private String name;
-    private String image;
+    private String thumbnailImage;
     private String address;
     private Double latitude;
     private Double longitude;
     private Integer benefitCount;
 
-    public MapShopDto(Long shopId, String name, String image) {
+    public MapShopDto(Long shopId, String name, String thumbnailImage) {
         this.shopId = shopId;
         this.name = name;
-        this.image = image;
+        this.thumbnailImage = thumbnailImage;
     }
 
     public static MapShopDto of(Shop shop) {
@@ -28,7 +28,7 @@ public class MapShopDto {
         MapShopDto mapShopDto = new MapShopDto(
                 shop.getId(),
                 shop.getName(),
-                shop.getImage()
+                shop.getThumbnailImage()
         );
 
         String address = Address.StringOf(shop.getAddress());
