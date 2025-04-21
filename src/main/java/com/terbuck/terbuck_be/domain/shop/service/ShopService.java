@@ -16,12 +16,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ShopService {
 
     private final JpaShopRepository repository;
 
-    @Transactional
     public ShopListResponse<HomeShopDto> getHomeShop(University university) {
         ShopListResponse<HomeShopDto> homeShopListResponse = new ShopListResponse<>();
 
@@ -34,7 +34,6 @@ public class ShopService {
         return homeShopListResponse;
     }
 
-    @Transactional
     public ShopListResponse<MapShopDto> getMapShop(University university) {
         ShopListResponse<MapShopDto> shopListResponse = new ShopListResponse<>();
 
