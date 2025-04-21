@@ -53,6 +53,7 @@ public class CsvShopImporter {
                 String name = cols[0].trim();
                 String categoryStr = cols[1].trim();
                 String benefitRaw = cols[2].trim();
+                String usageRaw = cols[3].trim();
                 String fullAddress = cols[4].trim();
                 double lat = Double.parseDouble(cols[5].trim());
                 double lng = Double.parseDouble(cols[6].trim());
@@ -69,13 +70,16 @@ public class CsvShopImporter {
                 List<Benefit> benefitList = parseBenefits(benefitRaw, shop);
                 shop.getBenefitList().addAll(benefitList);
 
+                List<Usages> usagesList = parseUsages(usageRaw, shop);
+                shop.getUsagesList().addAll(usagesList);
+
                 shopRepository.save(shop);
             }
             em.flush();
 
             log.info("All shops parsed and saved successfully.");
         } catch (Exception e) {
-            throw new RuntimeException("CSV 파싱 중 오류 발생", e);
+            throw new RuntimeException("CSV 파싱 중 오류 발생" + e.getMessage(), e);
         }
     }
 
@@ -103,6 +107,25 @@ public class CsvShopImporter {
 
         return benefits;
     }
+
+    private List<Usages> parseUsages(String usageRaw, Shop shop) {
+        List<Usages> usages = new ArrayList<>();
+        if (usageRaw == null || usageRaw.isBlank()) return usages;
+
+        // 번호로 시작하는 줄로 분리 (예: 1. 내용 ... 2. 내용 ...)
+        Pattern pattern = Pattern.compile("(?m)(\\d+\\.\\s*.+?)(?=(\\d+\\.\\s)|$)", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(usageRaw.trim());
+
+        while (matcher.find()) {
+            String usageText = matcher.group(1).trim();
+            Usages usage = new Usages(usageText);
+            usage.changeShop(shop); // shop 연관관계 설정
+            usages.add(usage);
+        }
+
+        return usages;
+    }
+
 
     private ShopCategory parseShopCategory(String value) {
         return Arrays.stream(ShopCategory.values())
