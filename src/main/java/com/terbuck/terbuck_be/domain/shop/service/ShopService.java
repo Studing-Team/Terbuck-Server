@@ -6,6 +6,7 @@ import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
+import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 import com.terbuck.terbuck_be.domain.shop.repository.JpaShopRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,10 @@ public class ShopService {
 
     private final JpaShopRepository repository;
 
-    public ShopListResponse<HomeShopDto> getHomeShop(University university) {
+    public ShopListResponse<HomeShopDto> getHomeShop(University university, List<ShopCategory> categoryList) {
         ShopListResponse<HomeShopDto> homeShopListResponse = new ShopListResponse<>();
 
-        List<Shop> shopsByUniv = repository.findAllByUniv(university);
+        List<Shop> shopsByUniv = repository.findAllByUnivAndCategory(university, categoryList);
         for (Shop shop : shopsByUniv) {
             HomeShopDto homeShopDto = HomeShopDto.of(shop);
             homeShopListResponse.getList().add(homeShopDto);
@@ -34,10 +35,10 @@ public class ShopService {
         return homeShopListResponse;
     }
 
-    public ShopListResponse<MapShopDto> getMapShop(University university) {
+    public ShopListResponse<MapShopDto> getMapShop(University university, List<ShopCategory> categoryList) {
         ShopListResponse<MapShopDto> shopListResponse = new ShopListResponse<>();
 
-        List<Shop> shopsByUniv = repository.findAllByUniv(university);
+        List<Shop> shopsByUniv = repository.findAllByUnivAndCategory(university, categoryList);
         for (Shop shop : shopsByUniv) {
             MapShopDto mapShopDto = MapShopDto.of(shop);
             shopListResponse.getList().add(mapShopDto);

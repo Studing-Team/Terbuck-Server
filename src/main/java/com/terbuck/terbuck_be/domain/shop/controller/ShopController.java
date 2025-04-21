@@ -7,6 +7,7 @@ import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
+import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 import com.terbuck.terbuck_be.domain.shop.service.CsvShopImporter;
 import com.terbuck.terbuck_be.domain.shop.service.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,12 +28,11 @@ public class ShopController {
     private final ShopService shopService;
     private final CsvShopImporter csvShopImporter;
 
-    /**
-     * TODO : @param Category 추가 List<String>을 통해서 여러 카테고리 보내면 모두 포함하도록
-     */
     @GetMapping("/home")
-    public ResponseEntity<SuccessStatusResponse<ShopListResponse<HomeShopDto>>> getHomeShop(@RequestParam University university) {
-        ShopListResponse<HomeShopDto> homeShopListResponse = shopService.getHomeShop(university);
+    public ResponseEntity<SuccessStatusResponse<ShopListResponse<HomeShopDto>>> getHomeShop(
+            @RequestParam University university,
+            @RequestParam(name = "category", required = false) List<ShopCategory> categoryList) {
+        ShopListResponse<HomeShopDto> homeShopListResponse = shopService.getHomeShop(university, categoryList);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -38,8 +40,10 @@ public class ShopController {
     }
 
     @GetMapping("/map")
-    public ResponseEntity<SuccessStatusResponse<ShopListResponse<MapShopDto>>> getMapShop(@RequestParam University university) {
-        ShopListResponse<MapShopDto> shopListResponse = shopService.getMapShop(university);
+    public ResponseEntity<SuccessStatusResponse<ShopListResponse<MapShopDto>>> getMapShop(
+            @RequestParam University university,
+            @RequestParam(name = "category", required = false) List<ShopCategory> categoryList) {
+        ShopListResponse<MapShopDto> shopListResponse = shopService.getMapShop(university, categoryList);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
