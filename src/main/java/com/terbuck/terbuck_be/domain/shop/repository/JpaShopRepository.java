@@ -4,10 +4,12 @@ import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JpaShopRepository implements ShopRepository {
