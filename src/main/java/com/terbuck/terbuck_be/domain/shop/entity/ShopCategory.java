@@ -4,6 +4,6 @@ public enum ShopCategory {
 
     음식점,
     카페,
-    운동
-
+    문화,
+    주점
 }
