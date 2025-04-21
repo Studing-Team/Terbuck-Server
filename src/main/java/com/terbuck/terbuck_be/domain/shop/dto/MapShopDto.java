@@ -38,11 +38,7 @@ public class MapShopDto {
         mapShopDto.setLatitude(location.getLatitude());
         mapShopDto.setLongitude(location.getLongitude());
 
-        int count = 0;
-        for (Benefit benefit : shop.getBenefitList()) {
-            count += benefit.getDetailList().size();
-        }
-        mapShopDto.setBenefitCount(count);
+        mapShopDto.setBenefitCount(shop.getBenefitList().size());
 
         return mapShopDto;
     }

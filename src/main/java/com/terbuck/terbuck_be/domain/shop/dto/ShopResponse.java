@@ -44,11 +44,7 @@ public class ShopResponse {
             benefitList.add(benefitDto);
         }
 
-        int count = 0;
-        for (Benefit benefit : shop.getBenefitList()) {
-            count += benefit.getDetailList().size();
-        }
-        shopResponse.setBenefitCount(count);
+        shopResponse.setBenefitCount(shop.getBenefitList().size());
 
         return shopResponse;
     }
