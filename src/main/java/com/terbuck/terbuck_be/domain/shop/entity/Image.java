@@ -19,4 +19,13 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    public Image(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public void changeShop(Shop shop) {
+        this.shop = shop;
+        shop.getImageList().add(this);
+    }
 }
