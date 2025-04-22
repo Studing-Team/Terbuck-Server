@@ -30,6 +30,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.opencsv:opencsv:5.9'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'software.amazon.awssdk:s3:2.25.1'
+	implementation 'software.amazon.awssdk:auth'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 처리를 위해 Jackson 사용
