@@ -3,13 +3,13 @@ package com.terbuck.terbuck_be.domain.member.entity;
 import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.common.enums.University;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Member {
 
     @Id
@@ -32,6 +32,8 @@ public class Member {
 
     @Embedded
     private StudentID studentID;
+
+    private Boolean isSignedUp;
 
     public Member(Long socialId, SocialType socialType, University university, Policy policy, String refreshToken) {
         this.socialId = socialId;
