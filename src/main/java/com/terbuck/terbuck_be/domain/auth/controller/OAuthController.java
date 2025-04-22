@@ -10,17 +10,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/oauth")
 public class OAuthController {
 
     private final KakaoOAuthService kakaoOAuthService;
     private final AuthService authService; // 내부 회원 가입/로그인 처리
 
-    @GetMapping("/oauth/kakao/callback")
+    @GetMapping("/kakao/callback")
     public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoCallback(@RequestParam String code) {
         // 소셜 인가 코드로 소셜 accessToken 발급
         String kakaoAccessToken = kakaoOAuthService.getAccessToken(code);
