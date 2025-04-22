@@ -53,4 +53,8 @@ public class Member {
         this.policy = new Policy(request.getAgreedToService(), request.getAgreedToEssentialInfo(), request.getAgreedToOptional());
         this.isSignedUp = true;
     }
+
+    public void updateUniversity(University university) {
+        this.university = university;
+    }
 }

@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.member.service;
 
+import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.repository.JpaMemberRepository;
@@ -17,5 +18,10 @@ public class MemberService {
     public void signIn(Long userId, SignInRequest signinRequest) {
         Member member = repository.findById(userId);
         member.additionalInfo(signinRequest);
+    }
+
+    public void updateUniv(Long userId, University university) {
+        Member member = repository.findById(userId);
+        member.updateUniversity(university);
     }
 }
