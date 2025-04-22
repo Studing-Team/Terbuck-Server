@@ -1,0 +1,42 @@
+package com.terbuck.terbuck_be.domain.auth.controller;
+
+import com.terbuck.terbuck_be.common.dto.SuccessMessage;
+import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
+import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
+import com.terbuck.terbuck_be.domain.auth.dto.LoginResponse;
+import com.terbuck.terbuck_be.domain.auth.service.KakaoOAuthService;
+import com.terbuck.terbuck_be.domain.auth.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+public class OAuthController {
+
+    private final KakaoOAuthService kakaoOAuthService;
+    private final AuthService authService; // 내부 회원 가입/로그인 처리
+
+    @GetMapping("/oauth/kakao/callback")
+    public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoCallback(@RequestParam String code) {
+        // 소셜 인가 코드로 소셜 accessToken 발급
+        String kakaoAccessToken = kakaoOAuthService.getAccessToken(code);
+        // 소셜 accessToken 으로 소셜 사용자 정보 조회
+        UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(kakaoAccessToken);
+
+        // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
+        LoginResponse loginResponse = LoginResponse.of(authService.loginOrSignup(userInfo));
+
+        SuccessMessage successMessage = SuccessMessage.LOGIN_SUCCESS;
+        if (loginResponse.getRedirect()) {
+            successMessage = SuccessMessage.NEED_MORE_INFO;
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(successMessage, loginResponse));
+    }
+}
+

@@ -12,7 +12,9 @@ public enum SuccessMessage {
 
     HOME_SHOP_GET_SUCCESS(HttpStatus.OK.value(), "홈 화면 제휴업체 데이터 조회에 성공했습니다."),
     MAP_SHOP_GET_SUCCESS(HttpStatus.OK.value(), "터벅터벅 화면 제휴업체 데이터 조회에 성공했습니다."),
-    ID_SHOP_GET_SUCCESS(HttpStatus.OK.value(), "ID를 통한 제휴 업체 단건 조회에 성공했습니다.")
+    ID_SHOP_GET_SUCCESS(HttpStatus.OK.value(), "ID를 통한 제휴 업체 단건 조회에 성공했습니다."),
+    LOGIN_SUCCESS(HttpStatus.OK.value(), "로그인에 성공했습니다."),
+    NEED_MORE_INFO(HttpStatus.OK.value(), "로그인에 성공했습니다. 그리고 추가 정보 입력이 필요합니다.")
     ;
     private final int status;
     private final String message;
