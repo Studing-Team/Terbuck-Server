@@ -2,6 +2,7 @@ package com.terbuck.terbuck_be.domain.member.entity;
 
 import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,5 +46,11 @@ public class Member {
 
     public void changeStudentID(StudentID studentID) {
         this.studentID = studentID;
+    }
+
+    public void additionalInfo(SignInRequest request) {
+        this.university = request.getUniversity();
+        this.policy = new Policy(request.getAgreedToService(), request.getAgreedToEssentialInfo(), request.getAgreedToOptional());
+        this.isSignedUp = true;
     }
 }
