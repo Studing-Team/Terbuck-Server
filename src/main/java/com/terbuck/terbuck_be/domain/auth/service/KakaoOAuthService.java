@@ -32,6 +32,8 @@ public class KakaoOAuthService {
     private String userInfoUri;
 
     public String getAccessToken(String code) {
+        System.out.println("redirectUri : " + redirectUri);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
