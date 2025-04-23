@@ -12,15 +12,12 @@ public class StudentID {
 
     private Boolean isRegistered;
 
-    private String name;
-
     private String studentNumber;
 
     private String idCardImage;
 
-    public StudentID(Boolean isRegistered, String name, String studentNumber, String idCardImage) {
+    public StudentID(Boolean isRegistered, String studentNumber, String idCardImage) {
         this.isRegistered = isRegistered;
-        this.name = name;
         this.studentNumber = studentNumber;
         this.idCardImage = idCardImage;
     }

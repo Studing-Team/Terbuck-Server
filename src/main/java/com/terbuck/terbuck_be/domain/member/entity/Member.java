@@ -20,6 +20,8 @@ public class Member {
 
     private Long socialId;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
@@ -56,5 +58,9 @@ public class Member {
 
     public void updateUniversity(University university) {
         this.university = university;
+    }
+
+    public void updateStudentID(String studentIDImageURL, String studentNumber) {
+        this.studentID = new StudentID(false, studentNumber, studentIDImageURL);
     }
 }
