@@ -19,6 +19,7 @@ public enum SuccessMessage {
     UNIV_UPDATE_SUCCESS(HttpStatus.OK.value(), "대학교 변경에 성공했습니다."),
     STUDENTID_UPDATE_SUCCESS(HttpStatus.OK.value(), "학생증 등록 요청에 성공했습니다."),
     STUDENTID_GET_SUCCESS(HttpStatus.OK.value(), "학생증 조회에 성공했습니다."),
+    STUDENTID_DELETE_SUCCESS(HttpStatus.NO_CONTENT.value(), "학생증 삭제에 성공했습니다.")
     ;
     private final int status;
     private final String message;

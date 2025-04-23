@@ -48,4 +48,9 @@ public class MemberService {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteStudentID(Long userId) {
+        Member member = repository.findById(userId);
+        member.updateStudentID(null, null);
+    }
 }

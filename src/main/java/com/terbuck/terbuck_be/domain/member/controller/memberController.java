@@ -62,6 +62,7 @@ public class memberController {
             @RequestPart String studentNumber,
             @AuthenticationPrincipal Long userId
     ) {
+
         /**
          * TODO : 요청 들어오면 슬랙 메시지 생성해서 보내도록 한다. (이미지, 이름, 학번 , 소셜 로그인 이름)
          */
@@ -71,4 +72,20 @@ public class memberController {
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_UPDATE_SUCCESS));
     }
+
+    @DeleteMapping("/studentID")
+    public ResponseEntity<SuccessStatusResponse<?>> deleteStudentID(
+            @AuthenticationPrincipal Long userId
+    ) {
+
+        /**
+         * TODO : S3에서 이미지 찾아서 삭제하는 로직도 추가하면 좋긴할듯
+         */
+        memberService.deleteStudentID(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_DELETE_SUCCESS));
+    }
+
 }
