@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoOAuthService {
@@ -32,7 +34,7 @@ public class KakaoOAuthService {
     private String userInfoUri;
 
     public String getAccessToken(String code) {
-        System.out.println("redirectUri : " + redirectUri);
+        log.info("redirectURI : {}" , redirectUri);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

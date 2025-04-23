@@ -22,8 +22,6 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
-        System.out.println("S3 Config AccessKey: " + accessKey);
-        System.out.println("S3 Config Region: " + region);
 
         return S3Client.builder()
                 .region(Region.of(region))
