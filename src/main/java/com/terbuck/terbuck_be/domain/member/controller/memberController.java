@@ -4,6 +4,7 @@ import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
+import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,8 +41,19 @@ public class memberController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(SuccessStatusResponse.of(SuccessMessage.UPDATE_UNIV_SUCCESS));
+                .body(SuccessStatusResponse.of(SuccessMessage.UNIV_UPDATE_SUCCESS));
     }
+
+    @GetMapping("/studentID")
+    public ResponseEntity<SuccessStatusResponse<StudentIDResponse>> getStudentID(
+            @AuthenticationPrincipal Long userID) {
+        StudentIDResponse studentIDResponse = memberService.getStudentID(userID);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_GET_SUCCESS, studentIDResponse));
+    }
+
 
     @PutMapping("/studentID")
     public ResponseEntity<SuccessStatusResponse<?>> updateStudentID(
@@ -57,6 +69,6 @@ public class memberController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(SuccessStatusResponse.of(SuccessMessage.UPDATE_STUDENTID_SUCCESS));
+                .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_UPDATE_SUCCESS));
     }
 }

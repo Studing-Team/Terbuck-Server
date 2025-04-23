@@ -3,6 +3,7 @@ package com.terbuck.terbuck_be.domain.member.service;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
+import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.repository.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,14 @@ public class MemberService {
     public void updateUniv(Long userId, University university) {
         Member member = repository.findById(userId);
         member.updateUniversity(university);
+    }
+
+    public StudentIDResponse getStudentID(Long userID) {
+        Member member = repository.findById(userID);
+        if (!member.getStudentID().getIsRegistered()) {
+            throw new IllegalArgumentException("아직 등록이 완료되지 않은 학생증입니다.");
+        }
+        return new StudentIDResponse(member.getName(), member.getStudentID().getStudentNumber(), member.getStudentID().getIdCardImage());
     }
 
     public void updateStudentID(Long userId, MultipartFile studentIDImage, String studentNumber) {
