@@ -46,6 +46,10 @@ public class Member {
         this.refreshToken = refreshToken;
     }
 
+    public void updateRefreshToken(String token) {
+        this.refreshToken = token;
+    }
+
     public void changeStudentID(StudentID studentID) {
         this.studentID = studentID;
     }
