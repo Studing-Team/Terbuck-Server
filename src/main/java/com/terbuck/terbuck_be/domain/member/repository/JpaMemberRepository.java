@@ -1,55 +1,58 @@
 package com.terbuck.terbuck_be.domain.member.repository;
 
 import com.terbuck.terbuck_be.common.enums.SocialType;
+import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.entity.StudentID;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaMemberRepository implements MemberRepository{
+public class JpaMemberRepository implements MemberRepository {
 
     private final EntityManager em;
 
     @Override
-    @Transactional
+    public Member findBy(Long id) {
+        Member member = em.find(Member.class, id);
+
+        if (member == null) {
+            throw new EntityNotFoundException("id 를 통한 엔티티 조회에 실패했습니다.");
+        }
+
+        return member;
+    }
+
+    @Override
+    public Member findBy(UserInfo userInfo) {
+        String jpql = "SELECT m FROM Member m WHERE m.socialId = :socialId AND m.socialType = :socialType";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("socialId", userInfo.socialId())
+                .setParameter("socialType", userInfo.socialType())
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+
+        return member;
+    }
+
+    @Override
     public Long signUp(Member member) {
         em.persist(member);
         return member.getId();
     }
 
     @Override
-    @Transactional
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
-    }
-
-    @Override
-    @Transactional
     public Long changeStudentID(Long id, StudentID studentID) {
 
-        Member findMember = findById(id);
+        Member findMember = findBy(id);
         findMember.changeStudentID(studentID);
 
         return findMember.getId();
     }
-
-    @Override
-    public Optional<Member> findBySocialIdAndSocialType(Long socialId, SocialType socialType) {
-        String jpql = "SELECT m FROM Member m WHERE m.socialId = :socialId AND m.socialType = :socialType";
-        Member result = em.createQuery(jpql, Member.class)
-                .setParameter("socialId", socialId)
-                .setParameter("socialType", socialType)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-
-        return Optional.ofNullable(result);
-    }
-
 }
