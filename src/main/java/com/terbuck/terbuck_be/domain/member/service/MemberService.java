@@ -1,6 +1,7 @@
 package com.terbuck.terbuck_be.domain.member.service;
 
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
@@ -21,18 +22,34 @@ public class MemberService {
     private final JpaMemberRepository repository;
     private final S3ImageService imageService;
 
+    public Member findMemberBy(UserInfo userInfo) {
+        return repository.findBy(userInfo);
+    }
+
     public void signIn(Long userId, SignInRequest signinRequest) {
-        Member member = repository.findById(userId);
+        Member member = repository.findBy(userId);
         member.additionalInfo(signinRequest);
     }
 
+    public Member register(UserInfo userInfo) {
+        Member newMember = Member.builder()
+                .socialId(userInfo.socialId())
+                .socialType(userInfo.socialType())
+                .isSignedUp(false)  // 추가 정보 아직 입력 안 했음
+                .build();
+
+        Long memberId = repository.signUp(newMember);
+
+        return repository.findBy(memberId);
+    }
+
     public void updateUniv(Long userId, University university) {
-        Member member = repository.findById(userId);
+        Member member = repository.findBy(userId);
         member.updateUniversity(university);
     }
 
     public StudentIDResponse getStudentID(Long userID) {
-        Member member = repository.findById(userID);
+        Member member = repository.findBy(userID);
         if (!member.getStudentID().getIsRegistered()) {
             throw new IllegalArgumentException("아직 등록이 완료되지 않은 학생증입니다.");
         }
@@ -40,7 +57,7 @@ public class MemberService {
     }
 
     public void updateStudentID(Long userId, MultipartFile studentIDImage, String studentNumber) {
-        Member member = repository.findById(userId);
+        Member member = repository.findBy(userId);
         try {
             String imageURL = imageService.uploadStudentIDImage(studentIDImage);
             member.updateStudentID(imageURL, studentNumber);
@@ -50,7 +67,11 @@ public class MemberService {
     }
 
     public void deleteStudentID(Long userId) {
-        Member member = repository.findById(userId);
+        Member member = repository.findBy(userId);
         member.updateStudentID(null, null);
+    }
+
+    public boolean isRegister(UserInfo userInfo) {
+        return repository.findBy(userInfo) != null;
     }
 }
