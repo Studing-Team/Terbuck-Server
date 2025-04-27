@@ -3,6 +3,7 @@ package com.terbuck.terbuck_be.domain.member.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
@@ -34,10 +35,10 @@ public class memberController {
 
     @PatchMapping("/univ")
     public ResponseEntity<SuccessStatusResponse<?>> updateUniv(
-            @RequestParam University university,
+            @RequestBody PatchUnivRequest patchUnivRequest,
             @AuthenticationPrincipal Long userId
     ) {
-        memberService.updateUniv(userId, university);
+        memberService.updateUniv(userId, patchUnivRequest.getUniversity());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
