@@ -26,6 +26,10 @@ public class MemberService {
         return repository.findBy(userInfo);
     }
 
+    public Member findMemberBy(Long id) {
+        return repository.findBy(id);
+    }
+
     public void signIn(Long userId, SignInRequest signinRequest) {
         Member member = repository.findBy(userId);
         member.additionalInfo(signinRequest);
