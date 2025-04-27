@@ -17,4 +17,6 @@ public interface ShopRepository {
     List<Shop> findAllByUnivAndCategory(University university, List<ShopCategory> categoryList);
 
     Shop findById(Long id);
+
+    Shop findByUnivAndName(University university, String name);
 }
