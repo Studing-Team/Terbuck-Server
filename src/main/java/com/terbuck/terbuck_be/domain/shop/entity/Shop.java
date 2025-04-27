@@ -56,4 +56,8 @@ public class Shop {
         this.shopLink = shopLink;
         this.location = location;
     }
+
+    public void changeThumbnailImage(String url) {
+        this.thumbnailImage = url;
+    }
 }
