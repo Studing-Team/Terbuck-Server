@@ -1,6 +1,7 @@
 package com.terbuck.terbuck_be.domain.auth.service;
 
 import com.terbuck.terbuck_be.domain.auth.dto.LoginResult;
+import com.terbuck.terbuck_be.domain.auth.dto.ReIssueResponse;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
@@ -32,5 +33,25 @@ public class AuthService {
         boolean needsAdditionalInfo = !member.getIsSignedUp();
 
         return new LoginResult(accessToken, refreshToken, member.getId(), needsAdditionalInfo);
+    }
+
+    public ReIssueResponse reIssue(String token) {
+
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new IllegalArgumentException("잘못된 리프레시 토큰입니다.");
+        }
+
+        Long memberId = jwtTokenProvider.getUserIdFromToken(token);
+        Member findMember = memberService.findMemberBy(memberId);
+
+        if (!findMember.getRefreshToken().equals(token)) {
+            throw new IllegalArgumentException("인증되지 않은 리프레시 토큰입니다.");
+        }
+
+        String accessToken = jwtTokenProvider.createAccessToken(memberId);
+        String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
+        findMember.updateRefreshToken(refreshToken);
+
+        return new ReIssueResponse(accessToken, refreshToken);
     }
 }

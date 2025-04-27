@@ -3,21 +3,20 @@ package com.terbuck.terbuck_be.domain.auth.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.auth.dto.LoginResponse;
+import com.terbuck.terbuck_be.domain.auth.dto.ReIssueRequest;
+import com.terbuck.terbuck_be.domain.auth.dto.ReIssueResponse;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.auth.service.AuthService;
 import com.terbuck.terbuck_be.domain.auth.service.KakaoOAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
-public class OAuthController {
+public class AuthController {
 
     private final KakaoOAuthService kakaoOAuthService;
     private final AuthService authService; // 내부 회원 가입/로그인 처리
@@ -37,6 +36,15 @@ public class OAuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(successMessage, loginResponse));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<SuccessStatusResponse<ReIssueResponse>> reissue(@RequestBody ReIssueRequest reIssueRequest) {
+        ReIssueResponse reIssueResponse = authService.reIssue(reIssueRequest.getRefreshToken());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.AUTH_REISSUE_SUCCESS, reIssueResponse));
     }
 }
 
