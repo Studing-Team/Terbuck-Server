@@ -21,7 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/oauth/**", "/image/**","/slack/**").permitAll() // 특정 경로는 인증 없이 접근 허용
+                        .requestMatchers("/auth/**", "/image/**","/slack/**").permitAll() // 특정 경로는 인증 없이 접근 허용
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
