@@ -2,11 +2,12 @@ package com.terbuck.terbuck_be.domain.member.controller;
 
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
+import com.terbuck.terbuck_be.domain.slack.service.SlackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class memberController {
 
     private final MemberService memberService;
+    private final S3ImageService imageService;
+    private final SlackService slackService;
 
     @PostMapping("/signin")
     public ResponseEntity<SuccessStatusResponse<?>> signIn(
@@ -63,11 +66,11 @@ public class memberController {
             @RequestPart String studentNumber,
             @AuthenticationPrincipal Long userId
     ) {
+        String imageURL = imageService.uploadStudentIDImage(image);
 
-        /**
-         * TODO : 요청 들어오면 슬랙 메시지 생성해서 보내도록 한다. (이미지, 이름, 학번 , 소셜 로그인 이름)
-         */
-        memberService.updateStudentID(userId, image, studentNumber);
+        memberService.updateStudentID(userId, imageURL, studentNumber);
+        String socialName = memberService.findMemberBy(userId).getName();
+        slackService.sendStudentIdUpdateMessage(userId, name, studentNumber, socialName, imageURL);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

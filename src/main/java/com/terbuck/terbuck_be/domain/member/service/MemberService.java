@@ -60,19 +60,23 @@ public class MemberService {
         return new StudentIDResponse(member.getName(), member.getStudentID().getStudentNumber(), member.getStudentID().getIdCardImage());
     }
 
-    public void updateStudentID(Long userId, MultipartFile studentIDImage, String studentNumber) {
+    public void updateStudentID(Long userId, String imageURL, String studentNumber) {
         Member member = repository.findBy(userId);
-        try {
-            String imageURL = imageService.uploadStudentIDImage(studentIDImage);
-            member.updateStudentID(imageURL, studentNumber);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        member.updateStudentID(imageURL, studentNumber);
     }
 
     public void deleteStudentID(Long userId) {
         Member member = repository.findBy(userId);
         member.updateStudentID(null, null);
+    }
+
+    public void enableStudentID(Long userId) {
+        Member member = repository.findBy(userId);
+        member.getStudentID().enable();
+    }
+
+    public void rejectStudentID(Long userId) {
+        deleteStudentID(userId);
     }
 
     public boolean isRegister(UserInfo userInfo) {
