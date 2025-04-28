@@ -21,4 +21,8 @@ public class StudentID {
         this.studentNumber = studentNumber;
         this.idCardImage = idCardImage;
     }
+
+    public void enable() {
+        this.isRegistered = true;
+    }
 }
