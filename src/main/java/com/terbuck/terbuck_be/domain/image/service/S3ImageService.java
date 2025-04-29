@@ -36,7 +36,7 @@ public class S3ImageService {
     public String uploadStudentIDImage(MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
-            String fileName = UUID.randomUUID() + "_" + originalFilename;
+            String fileName = UUID.randomUUID().toString();
             String fullPath = STUDENTID_FOLDER_NAME + "/" + fileName;
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
