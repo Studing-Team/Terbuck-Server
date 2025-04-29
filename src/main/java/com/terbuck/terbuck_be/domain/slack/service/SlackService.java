@@ -31,6 +31,8 @@ public class SlackService {
             Map<String, Object> payload = new HashMap<>();
             payload.put("blocks", buildBlocks(userId, name, studentNumber, socialName, imageUrl));
 
+            log.info("payload : {}", payload);
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -51,7 +53,7 @@ public class SlackService {
     private List<Map<String, Object>> buildBlocks(Long userId, String name, String studentNumber, String socialName, String imageUrl) {
         List<Map<String, Object>> blocks = new ArrayList<>();
 
-        // 텍스트 블록
+        // [1] 텍스트 블록
         Map<String, Object> textSection = new HashMap<>();
         textSection.put("type", "section");
         textSection.put("text", Map.of(
@@ -60,7 +62,16 @@ public class SlackService {
         ));
         blocks.add(textSection);
 
-        // 버튼 블록
+        // [2] 독립형 이미지 블록
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Map<String, Object> imageBlock = new HashMap<>();
+            imageBlock.put("type", "image");
+            imageBlock.put("image_url", imageUrl);
+            imageBlock.put("alt_text", "학생증 이미지");
+            blocks.add(imageBlock);
+        }
+
+        // [3] 버튼 블록
         Map<String, Object> actionsBlock = new HashMap<>();
         actionsBlock.put("type", "actions");
         actionsBlock.put("elements", List.of(
@@ -83,5 +94,6 @@ public class SlackService {
 
         return blocks;
     }
+
 }
 
