@@ -1,15 +1,13 @@
 package com.terbuck.terbuck_be.domain.member.repository;
 
-import com.terbuck.terbuck_be.common.enums.SocialType;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.entity.StudentID;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,7 +20,7 @@ public class JpaMemberRepository implements MemberRepository {
         Member member = em.find(Member.class, id);
 
         if (member == null) {
-            throw new EntityNotFoundException("id 를 통한 엔티티 조회에 실패했습니다.");
+            throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         return member;
@@ -42,7 +40,7 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Long signUp(Member member) {
+    public Long register(Member member) {
         em.persist(member);
         return member.getId();
     }

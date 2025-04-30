@@ -1,6 +1,8 @@
 package com.terbuck.terbuck_be.domain.slack.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,9 +46,11 @@ public class SlackService {
                 log.info("Slack message sent successfully.");
             } else {
                 log.error("Failed to send Slack message. Status: {}, Body: {}", response.getStatusCode(), response.getBody());
+                throw new RuntimeException("슬랙 메시지 전송 실패 : " + response.getStatusCode());
             }
         } catch (Exception e) {
             log.error("Error occurred while sending Slack message.", e);
+            throw new BusinessException(ErrorCode.SLACK_MESSAGE_FAILED);
         }
     }
 

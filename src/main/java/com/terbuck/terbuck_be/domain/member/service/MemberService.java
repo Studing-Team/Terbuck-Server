@@ -1,6 +1,8 @@
 package com.terbuck.terbuck_be.domain.member.service;
 
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
@@ -57,7 +59,7 @@ public class MemberService {
     public StudentIDResponse getStudentID(Long userID) {
         Member member = repository.findBy(userID);
         if (!member.getStudentID().getIsRegistered()) {
-            throw new IllegalArgumentException("아직 등록이 완료되지 않은 학생증입니다.");
+            throw new BusinessException(ErrorCode.MEMBER_STUDENTID_NOT_REGISTERED);
         }
         return new StudentIDResponse(member.getName(), member.getStudentID().getStudentNumber(), member.getStudentID().getIdCardImage());
     }
