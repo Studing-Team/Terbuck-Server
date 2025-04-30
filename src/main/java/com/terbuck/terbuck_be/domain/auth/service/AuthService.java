@@ -39,7 +39,9 @@ public class AuthService {
 
     public ReIssueResponse reIssue(String token) {
 
-        if (!jwtTokenProvider.validateToken(token)) {
+        try{
+            jwtTokenProvider.validateToken(token);
+        } catch (Exception e) {
             throw new BusinessException(ErrorCode.AUTH_REFRESH_TOKEN_INVALID);
         }
 
