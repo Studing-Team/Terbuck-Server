@@ -3,6 +3,8 @@ package com.terbuck.terbuck_be.domain.auth.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terbuck.terbuck_be.common.enums.SocialType;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -34,8 +37,6 @@ public class KakaoOAuthService {
     private String userInfoUri;
 
     public String getAccessToken(String code) {
-        log.info("redirectURI : {}" , redirectUri);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -47,13 +48,12 @@ public class KakaoOAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(tokenUri, request, String.class);
-
         try {
+            ResponseEntity<String> response = restTemplate.postForEntity(tokenUri, request, String.class);
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
             return jsonNode.get("access_token").asText();
         } catch (Exception e) {
-            throw new RuntimeException("카카오 access token 파싱 실패", e);
+            throw new BusinessException(ErrorCode.AUTH_KAKAO_AUTHORIZATION_CODE_NOT_FOUND);
         }
     }
 
@@ -76,12 +76,13 @@ public class KakaoOAuthService {
         try {
             JsonNode json = objectMapper.readTree(response.getBody());
             Long kakaoId = json.get("id").asLong();
+
 //            String nickname = json.get("properties").get("nickname").asText();
 //            String email = json.get("kakao_account").get("email").asText();
 
             return new UserInfo(kakaoId, SocialType.KAKAO);
         } catch (Exception e) {
-            throw new RuntimeException("카카오 사용자 정보 파싱 실패", e);
+            throw new BusinessException(ErrorCode.AUTH_KAKAO_USERINFO_PARSING_FAIL);
         }
     }
 }
