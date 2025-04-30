@@ -8,7 +8,7 @@ import com.terbuck.terbuck_be.domain.member.entity.StudentID;
 public interface MemberRepository {
 
     // 회원 가입
-    Long signUp(Member member);
+    Long register(Member member);
 
     // 학생증 입력
     Long changeStudentID(Long id, StudentID studentID);
