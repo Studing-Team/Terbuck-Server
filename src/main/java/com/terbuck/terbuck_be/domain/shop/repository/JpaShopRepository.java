@@ -1,6 +1,8 @@
 package com.terbuck.terbuck_be.domain.shop.repository;
 
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 import jakarta.persistence.EntityManager;
@@ -62,7 +64,12 @@ public class JpaShopRepository implements ShopRepository {
 
     @Override
     public Shop findById(Long id) {
-        return em.find(Shop.class, id);
+        Shop findShop = em.find(Shop.class, id);
+
+        if (findShop == null) {
+            throw new BusinessException(ErrorCode.SHOP_NOT_FOUND);
+        }
+        return findShop;
     }
 
     @Override
