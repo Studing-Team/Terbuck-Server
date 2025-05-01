@@ -1,0 +1,24 @@
+name: Deploy to EC2 (dev)
+
+on:
+  push:
+    branches: [ "dev" ]  # dev 브랜치에 push될 때만 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          cd /home/ubuntu/app
+          git pull origin dev
+          ./deploy.sh
