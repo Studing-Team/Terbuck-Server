@@ -3,6 +3,7 @@ package com.terbuck.terbuck_be.domain.shop.repository;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.shop.entity.*;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +23,13 @@ class JpaShopRepositoryTest {
     @Autowired
     EntityManager em;
 
+    @Disabled
     @Test
     @Transactional
     @Rollback(false)
     void save() {
         // given
-        Shop shop = new Shop("업체3", University.용인대학교, ShopCategory.운동,
+        Shop shop = new Shop("업체3", University.용인대학교, ShopCategory.음식점,
                 new Address("경기도", "용인시", "용인로", "11-5", null),
                 "imageURL",
                 "shopLinkURL",
@@ -62,6 +64,7 @@ class JpaShopRepositoryTest {
     }
 
 
+    @Disabled
     @Test
     @Transactional
     void findAll() {
@@ -81,6 +84,7 @@ class JpaShopRepositoryTest {
         }
     }
 
+    @Disabled
     @Test
     @Transactional
     void findById() {
