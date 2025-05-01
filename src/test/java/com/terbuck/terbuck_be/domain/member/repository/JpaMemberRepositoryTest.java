@@ -52,7 +52,7 @@ class JpaMemberRepositoryTest {
         Long savedMemberId = jpaMemberRepository.register(memberA);
 
         //when
-        StudentID studentID = new StudentID(false, "student1", "19011702");
+        StudentID studentID = new StudentID(false, "student", "19011702");
         jpaMemberRepository.changeStudentID(savedMemberId, studentID);
 
         //then
