@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.global.config;
 
+import com.terbuck.terbuck_be.global.filter.CustomAuthenticationEntryPoint;
 import com.terbuck.terbuck_be.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,18 +17,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/image/**","/slack/**").permitAll() // 특정 경로는 인증 없이 접근 허용
-                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                        .requestMatchers("/auth/**", "/image/**", "/slack/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
-                .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
-                .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 인증 비활성화
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 필터 추가
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
