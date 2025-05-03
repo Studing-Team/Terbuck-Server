@@ -8,6 +8,7 @@ import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
+import com.terbuck.terbuck_be.domain.member.entity.StudentID;
 import com.terbuck.terbuck_be.domain.member.repository.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class MemberService {
                 .socialId(userInfo.socialId())
                 .socialType(userInfo.socialType())
                 .isSignedUp(false)
+                .studentID(new StudentID(false, null, null))
                 .build();
 
         Long memberId = repository.register(newMember);
