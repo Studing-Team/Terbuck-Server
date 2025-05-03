@@ -9,6 +9,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,14 +55,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorStatusResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorStatusResponse> handleValidationException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
+        e.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorStatusResponse.of(HttpStatus.BAD_REQUEST.value(), errors.toString()));
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorStatusResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+
+        String requestPartName = e.getRequestPartName();
+        String message = String.format("파라미터명:'%s'에 해당하는 파트 정보는 필수입니다.", requestPartName);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorStatusResponse.of(HttpStatus.BAD_REQUEST.value(), message));
     }
 }
