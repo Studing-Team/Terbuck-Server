@@ -21,4 +21,5 @@ jobs:
         script: |
           cd /home/ubuntu/app
           git pull origin dev
+          echo "🚀 Deployed commit: $(git rev-parse HEAD)"
           ./deploy.sh
