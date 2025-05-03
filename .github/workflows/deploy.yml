@@ -19,7 +19,7 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_KEY }}
         script: |
-          cd /home/ubuntu/app
+          cd /home/ubuntu/Terbuck-Server
           git pull origin dev
           echo "🚀 Deployed commit: $(git rev-parse HEAD)"
           ./deploy.sh
