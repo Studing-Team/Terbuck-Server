@@ -8,6 +8,7 @@ import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
 import com.terbuck.terbuck_be.domain.slack.service.SlackService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class memberController {
 
     @PostMapping("/signin")
     public ResponseEntity<SuccessStatusResponse<?>> signIn(
-            @RequestBody SignInRequest signInRequest,
+            @RequestBody @Valid SignInRequest signInRequest,
             @AuthenticationPrincipal Long userId
     ) {
         memberService.signIn(userId, signInRequest);
