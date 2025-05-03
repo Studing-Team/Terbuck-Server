@@ -13,7 +13,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -76,11 +75,10 @@ public class KakaoOAuthService {
         try {
             JsonNode json = objectMapper.readTree(response.getBody());
             Long kakaoId = json.get("id").asLong();
-
-//            String nickname = json.get("properties").get("nickname").asText();
+            String nickname = json.get("properties").get("nickname").asText();
 //            String email = json.get("kakao_account").get("email").asText();
 
-            return new UserInfo(kakaoId, SocialType.KAKAO);
+            return new UserInfo(kakaoId, nickname, SocialType.KAKAO);
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.AUTH_KAKAO_USERINFO_PARSING_FAIL);
         }

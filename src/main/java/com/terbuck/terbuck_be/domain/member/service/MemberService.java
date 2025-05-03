@@ -41,6 +41,7 @@ public class MemberService {
     public Member register(UserInfo userInfo) {
         Member newMember = Member.builder()
                 .socialId(userInfo.socialId())
+                .name(userInfo.name())
                 .socialType(userInfo.socialType())
                 .isSignedUp(false)
                 .studentID(new StudentID(false, null, null))
