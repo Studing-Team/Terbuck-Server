@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.member.entity;
 
+import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
@@ -21,6 +22,9 @@ public class Member {
     private Long socialId;
 
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     private SocialType socialType;

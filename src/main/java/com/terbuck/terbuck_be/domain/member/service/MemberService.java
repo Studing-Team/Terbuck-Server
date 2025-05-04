@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.member.service;
 
+import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
@@ -41,6 +42,7 @@ public class MemberService {
     public Member register(UserInfo userInfo) {
         Member newMember = Member.builder()
                 .socialId(userInfo.socialId())
+                .role(Role.MEMBER)
                 .name(userInfo.name())
                 .socialType(userInfo.socialType())
                 .isSignedUp(false)
