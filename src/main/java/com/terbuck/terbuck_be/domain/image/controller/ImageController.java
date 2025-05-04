@@ -4,6 +4,7 @@ import com.terbuck.terbuck_be.domain.image.dto.UpdateShopRequest;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,8 @@ public class ImageController {
         }
     }
 
-    @PostMapping("/shop_update")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/image")
     public ResponseEntity<?> updateShopImageList(@RequestBody UpdateShopRequest updateShopRequest) {
         try {
             s3ImageService.updateAllShopImagesByUniversity(updateShopRequest.getUniversity());
