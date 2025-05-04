@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.global;
 
+import com.terbuck.terbuck_be.common.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -7,10 +8,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenProvider {
@@ -31,18 +35,19 @@ public class JwtTokenProvider {
     // RefreshToken 유효 시간 (7일)
     private final long REFRESH_TOKEN_VALID_TIME = 7 * 24 * 60 * 60 * 1000L;
 
-    public String createAccessToken(Long userId) {
-        return createToken(userId, ACCESS_TOKEN_VALID_TIME);
+    public String createAccessToken(Long userId, Role role) {
+        return createToken(userId, role, ACCESS_TOKEN_VALID_TIME);
     }
 
-    public String createRefreshToken(Long userId) {
-        return createToken(userId, REFRESH_TOKEN_VALID_TIME);
+    public String createRefreshToken(Long userId, Role role) {
+        return createToken(userId, role, REFRESH_TOKEN_VALID_TIME);
     }
 
-    private String createToken(Long userId, long expireTime) {
+    private String createToken(Long userId, Role role, long expireTime) {
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
+                .claim("roles", "ROLE_" + role.name())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expireTime))
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -60,6 +65,18 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             throw new RuntimeException("유효하지 않은 JWT 토큰입니다.");
         }
+    }
+
+    public List<GrantedAuthority> getAuthorities(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        String role = claims.get("roles", String.class);
+
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     public void validateToken(String token) {

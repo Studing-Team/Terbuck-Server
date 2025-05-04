@@ -28,8 +28,8 @@ public class AuthService {
             member = memberService.register(userInfo);
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(member.getId());
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getRole());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getId(), member.getRole());
         member.updateRefreshToken(refreshToken);
 
         boolean needsAdditionalInfo = !member.getIsSignedUp();
@@ -52,8 +52,8 @@ public class AuthService {
             throw new BusinessException(ErrorCode.AUTH_REFRESH_TOKEN_INVALID);
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(memberId);
-        String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
+        String accessToken = jwtTokenProvider.createAccessToken(memberId, findMember.getRole());
+        String refreshToken = jwtTokenProvider.createRefreshToken(memberId, findMember.getRole());
         findMember.updateRefreshToken(refreshToken);
 
         return new ReIssueResponse(accessToken, refreshToken);
