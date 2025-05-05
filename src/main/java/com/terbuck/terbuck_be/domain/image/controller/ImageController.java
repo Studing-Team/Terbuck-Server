@@ -26,7 +26,7 @@ public class ImageController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/image")
+    @PostMapping("/update")
     public ResponseEntity<?> updateShopImageList(@RequestBody UpdateShopRequest updateShopRequest) {
         try {
             s3ImageService.updateAllShopImagesByUniversity(updateShopRequest.getUniversity());
