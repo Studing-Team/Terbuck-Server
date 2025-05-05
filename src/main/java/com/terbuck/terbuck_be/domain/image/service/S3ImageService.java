@@ -1,8 +1,8 @@
 package com.terbuck.terbuck_be.domain.image.service;
 
 import com.terbuck.terbuck_be.common.enums.University;
-import com.terbuck.terbuck_be.domain.shop.entity.Image;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
+import com.terbuck.terbuck_be.domain.shop.entity.ShopImage;
 import com.terbuck.terbuck_be.domain.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +59,6 @@ public class S3ImageService {
     }
 
     public void updateAllShopImagesByUniversity(University university) {
-        log.info("updateAllShopImagesByUniv");
         String universityPrefix = String.format("shop/%s/", university);
 
         // 대학교 폴더 하위의 모든 객체 가져오기
@@ -85,7 +84,6 @@ public class S3ImageService {
     }
 
     private void updateShopImages(University university, String shopName) {
-        log.info("updateShopImages : univ : {} , shopName : {}", university, shopName);
         String prefix = String.format("shop/%s/%s/", university, shopName);
 
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
@@ -97,12 +95,11 @@ public class S3ImageService {
 
         Shop shop = shopRepository.findByUnivAndName(university, shopName);
 
-        log.info("내부 순회 시작");
         for (S3Object obj : listResponse.contents()) {
             if (obj.key().endsWith("/")) continue;
 
             String url = getFileUrl(obj.key());
-            Image image = new Image(url);
+            ShopImage image = new ShopImage(url);
             image.changeShop(shop);
 
             if (obj.key().endsWith("1.png")) {

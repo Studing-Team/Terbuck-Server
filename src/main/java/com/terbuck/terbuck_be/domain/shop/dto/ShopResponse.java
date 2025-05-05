@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.shop.dto;
 
+import com.terbuck.terbuck_be.common.entity.Image;
 import com.terbuck.terbuck_be.domain.shop.entity.*;
 import lombok.Data;
 

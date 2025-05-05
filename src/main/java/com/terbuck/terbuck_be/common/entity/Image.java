@@ -1,4 +1,4 @@
-package com.terbuck.terbuck_be.domain.shop.entity;
+package com.terbuck.terbuck_be.common.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,9 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public abstract class Image {
 
     @Id
     @GeneratedValue
@@ -16,16 +17,7 @@ public class Image {
 
     private String imageURL;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
-
     public Image(String imageURL) {
         this.imageURL = imageURL;
-    }
-
-    public void changeShop(Shop shop) {
-        this.shop = shop;
-        shop.getImageList().add(this);
     }
 }

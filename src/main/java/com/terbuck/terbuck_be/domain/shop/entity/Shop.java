@@ -44,7 +44,7 @@ public class Shop {
     private List<Usages> usagesList = new ArrayList<>();
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> imageList = new ArrayList<>();
+    private List<ShopImage> imageList = new ArrayList<>();
 
     public Shop(String name, University university, ShopCategory category, Address address, String thumbnailImage, String shopLink, Location location) {
 
