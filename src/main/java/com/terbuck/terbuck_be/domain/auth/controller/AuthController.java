@@ -21,21 +21,29 @@ public class AuthController {
     private final KakaoOAuthService kakaoOAuthService;
     private final AuthService authService; // 내부 회원 가입/로그인 처리
 
-    @GetMapping("/kakao/callback")
-    public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoCallback(@RequestParam String code) {
+    @GetMapping("/kakao")
+    public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoLogin(@RequestParam String code) {
         String kakaoAccessToken = kakaoOAuthService.getAccessToken(code);
         UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(kakaoAccessToken);
 
         // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
         LoginResponse loginResponse = LoginResponse.of(authService.loginProcess(userInfo));
 
-        SuccessMessage successMessage = SuccessMessage.LOGIN_SUCCESS;
+        SuccessMessage successMessage;
         if (loginResponse.getRedirect()) {
             successMessage = SuccessMessage.NEED_MORE_INFO;
+        }else{
+            successMessage = SuccessMessage.LOGIN_SUCCESS;
         }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(successMessage, loginResponse));
+    }
+
+    @GetMapping("/kakao/callback")
+    public String kakaoCallback(@RequestParam String code) {
+
+        return "code : " + code;
     }
 
     @PostMapping("/reissue")
