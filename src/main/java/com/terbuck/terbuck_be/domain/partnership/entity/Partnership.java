@@ -2,15 +2,15 @@ package com.terbuck.terbuck_be.domain.partnership.entity;
 
 import com.terbuck.terbuck_be.common.enums.University;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 @Getter
 public class Partnership {
 
@@ -24,10 +24,15 @@ public class Partnership {
     private University university;
 
     @Enumerated(EnumType.STRING)
-    private Institution institution;
+    private PartnerCategory category;
 
     @Enumerated(EnumType.STRING)
-    private PartnerCategory category;
+    private Institution institution;
+
+    @Lob
+    private String detail;
+
+    private String snsLink;
 
     @OneToMany(mappedBy = "partnership")
     private List<PartnershipImage> imageList = new ArrayList<>();
