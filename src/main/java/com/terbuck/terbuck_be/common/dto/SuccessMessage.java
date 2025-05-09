@@ -18,6 +18,8 @@ public enum SuccessMessage {
     SIGN_IN_SUCCESS(HttpStatus.OK.value(), "추가 정보 입력이 완료되어 회원가입에 성공하였습니다."),
     UNIV_UPDATE_SUCCESS(HttpStatus.OK.value(), "대학교 변경에 성공했습니다."),
 
+    HOME_PARTNERSHIP_GET_SUCCESS(HttpStatus.OK.value(), "홈 화면 파트너십 데이터 조회에 성공했습니다"),
+
     STUDENTID_UPDATE_SUCCESS(HttpStatus.OK.value(), "학생증 등록 요청에 성공했습니다."),
     STUDENTID_GET_SUCCESS(HttpStatus.OK.value(), "학생증 조회에 성공했습니다."),
     STUDENTID_DELETE_SUCCESS(HttpStatus.NO_CONTENT.value(), "학생증 삭제에 성공했습니다."),
