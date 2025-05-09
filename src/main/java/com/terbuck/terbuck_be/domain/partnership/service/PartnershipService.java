@@ -3,10 +3,12 @@ package com.terbuck.terbuck_be.domain.partnership.service;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.partnership.dto.HomePartnershipDto;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipListResponse;
+import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipResponse;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
 import com.terbuck.terbuck_be.domain.partnership.repository.JpaPartnershipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class PartnershipService {
 
     private final JpaPartnershipRepository partnershipRepository;
 
+    @Transactional
     public PartnershipListResponse<HomePartnershipDto> getHomePartnership(University university) {
         PartnershipListResponse<HomePartnershipDto> homePartnershipListResponse = new PartnershipListResponse<>();
 
@@ -26,5 +29,11 @@ public class PartnershipService {
         }
 
         return homePartnershipListResponse;
+    }
+
+    @Transactional
+    public PartnershipResponse getShop(Long partnershipId) {
+        Partnership partnership = partnershipRepository.findById(partnershipId);
+        return PartnershipResponse.of(partnership);
     }
 }

@@ -1,8 +1,9 @@
 package com.terbuck.terbuck_be.domain.partnership.repository;
 
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
-import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +30,15 @@ public class JpaPartnershipRepository implements PartnershipRepository {
                 ).setParameter("univ", university)
                 .getResultList();
     }
+
+    @Override
+    public Partnership findById(Long id) {
+        Partnership findPartnership = em.find(Partnership.class, id);
+
+        if (findPartnership == null) {
+            throw new BusinessException(ErrorCode.PARTNERSHIP_NOT_FOUND);
+        }
+        return findPartnership;
+    }
+
 }
