@@ -16,7 +16,9 @@ public enum ErrorCode {
 
     SLACK_MESSAGE_FAILED(HttpStatus.BAD_REQUEST.value(), "슬랙 메시지 전송에 실패하였습니다."),
 
-    SHOP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 업체가 존재하지 않습니다.")
+    SHOP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 업체가 존재하지 않습니다."),
+
+    PARTNERSHIP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 파트너십이 존재하지 않습니다.")
     ;
 
     private final int status;

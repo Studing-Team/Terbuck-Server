@@ -19,6 +19,7 @@ public enum SuccessMessage {
     UNIV_UPDATE_SUCCESS(HttpStatus.OK.value(), "대학교 변경에 성공했습니다."),
 
     HOME_PARTNERSHIP_GET_SUCCESS(HttpStatus.OK.value(), "홈 화면 파트너십 데이터 조회에 성공했습니다"),
+    ID_PARTNERSHIP_GET_SUCCESS(HttpStatus.OK.value(), "ID를 통한 파트너십 단건 조회에 성공했습니다"),
 
     STUDENTID_UPDATE_SUCCESS(HttpStatus.OK.value(), "학생증 등록 요청에 성공했습니다."),
     STUDENTID_GET_SUCCESS(HttpStatus.OK.value(), "학생증 조회에 성공했습니다."),

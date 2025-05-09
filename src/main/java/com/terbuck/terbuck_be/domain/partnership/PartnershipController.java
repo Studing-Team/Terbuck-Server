@@ -5,18 +5,14 @@ import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.partnership.dto.HomePartnershipDto;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipListResponse;
+import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipResponse;
 import com.terbuck.terbuck_be.domain.partnership.service.CsvPartnershipImporter;
 import com.terbuck.terbuck_be.domain.partnership.service.PartnershipService;
-import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
-import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
-import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +30,15 @@ public class PartnershipController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.HOME_PARTNERSHIP_GET_SUCCESS, homePartnershipList));
+    }
+
+    @GetMapping("/{partnership_id}")
+    public ResponseEntity<SuccessStatusResponse<PartnershipResponse>> getPartnership(@PathVariable(name = "partnership_id") Long partnershipId) {
+        PartnershipResponse partnershipResponse = partnershipService.getShop(partnershipId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.ID_PARTNERSHIP_GET_SUCCESS, partnershipResponse));
     }
 
     @PostMapping("/upload")
