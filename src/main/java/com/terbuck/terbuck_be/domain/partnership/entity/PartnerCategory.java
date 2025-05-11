@@ -4,5 +4,8 @@ public enum PartnerCategory {
 
     병원,
     문화,
-    교육
+    교육,
+    생활,
+    운동
+
 }
