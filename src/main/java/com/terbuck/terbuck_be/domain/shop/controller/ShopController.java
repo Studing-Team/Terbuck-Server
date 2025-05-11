@@ -3,6 +3,8 @@ package com.terbuck.terbuck_be.domain.shop.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.image.dto.UpdateShopRequest;
+import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
@@ -27,7 +29,6 @@ import java.util.List;
 public class ShopController {
 
     private final ShopService shopService;
-    private final CsvShopImporter csvShopImporter;
 
     @GetMapping("/home")
     public ResponseEntity<SuccessStatusResponse<ShopListResponse<HomeShopDto>>> getHomeShop(
@@ -58,18 +59,5 @@ public class ShopController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.ID_SHOP_GET_SUCCESS, shopResponse));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file, @RequestParam("university") University university) {
-        log.info("upload");
-        try {
-            csvShopImporter.importFromCsv(file, university);
-            return ResponseEntity.ok("업로드 및 저장 성공!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("업로드 실패: " + e.getMessage());
-        }
     }
 }
