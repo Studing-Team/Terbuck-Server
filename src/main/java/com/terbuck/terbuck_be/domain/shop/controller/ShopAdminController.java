@@ -16,12 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/shops")
+@PreAuthorize("hasRole('ADMIN')")
 public class ShopAdminController {
 
     private final CsvShopImporter csvShopImporter;
     private final S3ImageService s3ImageService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upload")
     public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file, @RequestParam("university") University university) {
         log.info("upload");
@@ -34,7 +34,6 @@ public class ShopAdminController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/image")
     public ResponseEntity<?> updateShopImageList(@RequestBody UpdateShopRequest updateShopRequest) {
         try {

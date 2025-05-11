@@ -1,7 +1,6 @@
 package com.terbuck.terbuck_be.domain.partnership.controller;
 
 import com.terbuck.terbuck_be.common.enums.University;
-import com.terbuck.terbuck_be.domain.image.dto.UpdateShopRequest;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.partnership.dto.UpdateImageRequest;
 import com.terbuck.terbuck_be.domain.partnership.service.CsvPartnershipImporter;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/partnership")
+@PreAuthorize("hasRole('ADMIN')")
 public class PartnershipAdminController {
 
     private final CsvPartnershipImporter csvPartnershipImporter;
