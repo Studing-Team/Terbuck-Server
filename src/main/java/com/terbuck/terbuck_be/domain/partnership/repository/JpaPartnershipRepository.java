@@ -5,6 +5,7 @@ import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -41,4 +42,16 @@ public class JpaPartnershipRepository implements PartnershipRepository {
         return findPartnership;
     }
 
+    @Override
+    public Partnership findByUnivAndName(University university, String partnershipName) {
+        try {
+            return em.createQuery("select p from Partnership p where p.university =: univ and p.name =: name",
+                            Partnership.class)
+                    .setParameter("univ", university)
+                    .setParameter("name", partnershipName)
+                    .getSingleResult();
+        } catch (Exception e) {
+            throw new EntityNotFoundException("해당 파트너십을 찾을 수 없습니다.");
+        }
+    }
 }

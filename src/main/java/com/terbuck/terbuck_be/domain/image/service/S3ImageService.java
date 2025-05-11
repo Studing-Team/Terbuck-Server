@@ -1,6 +1,9 @@
 package com.terbuck.terbuck_be.domain.image.service;
 
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
+import com.terbuck.terbuck_be.domain.partnership.entity.PartnershipImage;
+import com.terbuck.terbuck_be.domain.partnership.repository.JpaPartnershipRepository;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopImage;
 import com.terbuck.terbuck_be.domain.shop.repository.ShopRepository;
@@ -24,6 +27,7 @@ public class S3ImageService {
 
     private final S3Client s3Client;
     private final ShopRepository shopRepository;
+    private final JpaPartnershipRepository jpaPartnershipRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -105,6 +109,51 @@ public class S3ImageService {
             if (obj.key().endsWith("1.png")) {
                 shop.changeThumbnailImage(url); // shop 객체에 thumbnail 필드 설정
             }
+        }
+    }
+
+    public void updateAllPartnershipImagesByUniversity(University university) {
+        String partnershipUniversityPrefix = String.format("partnership/%s/", university);
+
+        // 대학교 폴더 하위의 모든 객체 가져오기
+        ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                .bucket(bucket)
+                .prefix(partnershipUniversityPrefix)
+                .delimiter("/") // 폴더 단위로 끊기
+                .build();
+
+        ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+
+        // CommonPrefixes: 폴더들 (업체 폴더 경로들)
+        for (CommonPrefix commonPrefix : listResponse.commonPrefixes()) {
+            String partnershipFolderKey = commonPrefix.prefix();
+
+            String[] parts = partnershipFolderKey.split("/");
+            if (parts.length < 3) continue;
+            String partnershipName = parts[2];
+
+            updatePartnershipImages(university, partnershipName);
+        }
+    }
+
+    private void updatePartnershipImages(University university, String partnershipName) {
+        String prefix = String.format("partnership/%s/%s/", university, partnershipName);
+
+        ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                .bucket(bucket)
+                .prefix(prefix)
+                .build();
+
+        ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+
+        Partnership partnership = jpaPartnershipRepository.findByUnivAndName(university, partnershipName);
+
+        for (S3Object obj : listResponse.contents()) {
+            if (obj.key().endsWith("/")) continue;
+
+            String url = getFileUrl(obj.key());
+            PartnershipImage image = new PartnershipImage(url);
+            image.changePartnership(partnership);
         }
     }
 }
