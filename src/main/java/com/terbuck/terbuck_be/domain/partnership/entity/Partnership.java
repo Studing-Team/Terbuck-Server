@@ -34,7 +34,7 @@ public class Partnership {
 
     private String snsLink;
 
-    @OneToMany(mappedBy = "partnership")
+    @OneToMany(mappedBy = "partnership", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnershipImage> imageList = new ArrayList<>();
 
 }
