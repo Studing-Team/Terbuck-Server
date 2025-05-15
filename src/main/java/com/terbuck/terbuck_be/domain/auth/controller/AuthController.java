@@ -1,5 +1,7 @@
 package com.terbuck.terbuck_be.domain.auth.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.auth.dto.LoginResponse;
@@ -46,29 +48,56 @@ public class AuthController {
         return "code : " + code;
     }
 
-//    @GetMapping("/apple")
-//    public ResponseEntity<SuccessStatusResponse<LoginResponse>> appleLogin(@RequestParam String code) {
-//        String kakaoAccessToken = kakaoOAuthService.getAccessToken(code);
-//        UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(kakaoAccessToken);
-//
-//        // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
-//        LoginResponse loginResponse = LoginResponse.of(authService.loginProcess(userInfo));
-//
-//        SuccessMessage successMessage;
-//        if (loginResponse.getRedirect()) {
-//            successMessage = SuccessMessage.NEED_MORE_INFO;
-//        }else{
-//            successMessage = SuccessMessage.LOGIN_SUCCESS;
-//        }
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(SuccessStatusResponse.of(successMessage, loginResponse));
-//    }
+    @GetMapping("/apple")
+    public ResponseEntity<SuccessStatusResponse<LoginResponse>> appleLogin(@RequestParam String code) {
+        String kakaoAccessToken = kakaoOAuthService.getAccessToken(code);
+        UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(kakaoAccessToken);
 
-    @GetMapping("/apple/callback")
-    public String appleCallback(@RequestParam String code) {
+        // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
+        LoginResponse loginResponse = LoginResponse.of(authService.loginProcess(userInfo));
 
-        return "code : " + code;
+        SuccessMessage successMessage;
+        if (loginResponse.getRedirect()) {
+            successMessage = SuccessMessage.NEED_MORE_INFO;
+        }else{
+            successMessage = SuccessMessage.LOGIN_SUCCESS;
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(successMessage, loginResponse));
+    }
+
+    @PostMapping("/apple/callback")
+    public ResponseEntity<String> handleAppleCallback(
+            @RequestParam("code") String code,
+            @RequestParam("state") String state,
+            @RequestParam(value = "user", required = false) String userJson
+    ) {
+        // userJson은 최초 로그인 시에만 옴
+        if (userJson != null) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                JsonNode json = objectMapper.readTree(userJson);
+                String firstName = json.path("name").path("firstName").asText();
+                String lastName = json.path("name").path("lastName").asText();
+                String userName = firstName + lastName;
+
+                System.out.println("✅ Apple 유저 이름: " + userName);
+            } catch (Exception e) {
+                System.out.println("❌ user 파싱 실패: " + e.getMessage());
+            }
+        }
+
+        System.out.println("✅ 받은 code: " + code);
+        System.out.println("✅ 받은 state: " + state);
+
+        // 1. 받은 code로 Apple 서버에 토큰 요청
+        // 2. 받은 id_token으로 사용자 식별
+        // 3. DB 조회 및 자체 로그인 처리
+        // 4. JWT 발급 등 응답
+
+        return ResponseEntity.ok("code : " + code + "\nstate : " + state);
     }
 
     @PostMapping("/reissue")
