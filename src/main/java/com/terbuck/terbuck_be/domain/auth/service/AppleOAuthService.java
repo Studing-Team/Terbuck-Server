@@ -66,6 +66,7 @@ public class AppleOAuthService {
 
             return new UserInfo(sub, name, SocialType.APPLE);
         } catch (Exception e) {
+            log.info("e : " + e);
             throw new BusinessException(ErrorCode.AUTH_APPLE_AUTHORIZATION_CODE_NOT_FOUND);
         }
     }

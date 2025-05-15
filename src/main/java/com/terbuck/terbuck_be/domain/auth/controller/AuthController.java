@@ -83,15 +83,10 @@ public class AuthController {
                 String firstName = json.path("name").path("firstName").asText();
                 String lastName = json.path("name").path("lastName").asText();
                 String userName = lastName + firstName;
-
-                System.out.println("✅ Apple 유저 이름: " + userName);
             } catch (Exception e) {
-                System.out.println("❌ user 파싱 실패: " + e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         }
-
-        System.out.println("✅ 받은 code: " + code);
-        System.out.println("✅ 받은 state: " + state);
 
         return ResponseEntity.ok("code : " + code + "\nstate : " + state);
     }
