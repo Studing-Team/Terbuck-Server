@@ -19,7 +19,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    private Long socialId;
+    private String socialId;
 
     private String name;
 
@@ -42,7 +42,7 @@ public class Member {
 
     private Boolean isSignedUp;
 
-    public Member(Long socialId, SocialType socialType, University university, Policy policy, String refreshToken) {
+    public Member(String socialId, SocialType socialType, University university, Policy policy, String refreshToken) {
         this.socialId = socialId;
         this.socialType = socialType;
         this.university = university;

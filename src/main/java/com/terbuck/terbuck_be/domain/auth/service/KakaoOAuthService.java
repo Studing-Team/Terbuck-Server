@@ -20,8 +20,8 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KakaoOAuthService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -74,7 +74,7 @@ public class KakaoOAuthService {
          */
         try {
             JsonNode json = objectMapper.readTree(response.getBody());
-            Long kakaoId = json.get("id").asLong();
+            String kakaoId = json.get("id").asText();
             String nickname = json.get("properties").get("nickname").asText();
 //            String email = json.get("kakao_account").get("email").asText();
 
