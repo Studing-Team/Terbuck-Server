@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.shop.entity;
 
+import com.terbuck.terbuck_be.common.entity.BaseTimeEntity;
 import com.terbuck.terbuck_be.common.enums.University;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Shop {
+public class Shop extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.member.entity;
 
+import com.terbuck.terbuck_be.common.entity.BaseTimeEntity;
 import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.common.enums.University;
@@ -12,7 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

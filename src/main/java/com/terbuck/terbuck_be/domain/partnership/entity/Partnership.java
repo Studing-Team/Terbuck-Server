@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.partnership.entity;
 
+import com.terbuck.terbuck_be.common.entity.BaseTimeEntity;
 import com.terbuck.terbuck_be.common.enums.University;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Getter
-public class Partnership {
+public class Partnership extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
