@@ -28,12 +28,12 @@ public class AppConfig {
         return () -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (authentication == null || !authentication.isAuthenticated()) {
+            if (authentication == null || !authentication.isAuthenticated() ||
+                    authentication.getPrincipal().equals("anonymousUser")) {
                 return Optional.empty();
             }
 
             return Optional.of((Long) authentication.getPrincipal());
         };
     }
-
 }
