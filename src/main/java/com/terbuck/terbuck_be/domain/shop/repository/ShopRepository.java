@@ -1,6 +1,7 @@
 package com.terbuck.terbuck_be.domain.shop.repository;
 
 import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.shop.entity.Location;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 
@@ -14,7 +15,7 @@ public interface ShopRepository {
 
     List<Shop> findAllByUniv(University university);
 
-    List<Shop> findAllByUnivAndCategory(University university, List<ShopCategory> categoryList);
+    List<Shop> findAllByUnivAndCategoryAndLocation(University university, List<ShopCategory> categoryList, Location location);
 
     Shop findById(Long id);
 
