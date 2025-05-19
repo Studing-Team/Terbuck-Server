@@ -6,7 +6,6 @@ import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.domain.partnership.dto.HomePartnershipDto;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipListResponse;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipResponse;
-import com.terbuck.terbuck_be.domain.partnership.service.CsvPartnershipImporter;
 import com.terbuck.terbuck_be.domain.partnership.service.PartnershipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +19,7 @@ public class PartnershipController {
 
     private final PartnershipService partnershipService;
 
+
     @GetMapping("/home")
     public ResponseEntity<SuccessStatusResponse<PartnershipListResponse<HomePartnershipDto>>> getHomeShop(
             @RequestParam University university) {
@@ -28,6 +28,16 @@ public class PartnershipController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.HOME_PARTNERSHIP_GET_SUCCESS, homePartnershipList));
+    }
+
+    @GetMapping("/home_new")
+    public ResponseEntity<SuccessStatusResponse<PartnershipListResponse<HomePartnershipDto>>> getNewHomeShop(
+            @RequestParam University university) {
+        PartnershipListResponse<HomePartnershipDto> homePartnershipList = partnershipService.getNewHomePartnership(university);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.HOME_NEW_PARTNERSHIP_GET_SUCCESS, homePartnershipList));
     }
 
     @GetMapping("/{partnership_id}")
