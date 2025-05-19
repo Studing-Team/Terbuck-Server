@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,7 +23,20 @@ public class PartnershipService {
     public PartnershipListResponse<HomePartnershipDto> getHomePartnership(University university) {
         PartnershipListResponse<HomePartnershipDto> homePartnershipListResponse = new PartnershipListResponse<>();
 
-        List<Partnership> partnershipsByUniv = partnershipRepository.findAllByUnivAndCategory(university);
+        List<Partnership> partnershipsByUniv = partnershipRepository.findAllByUniv(university);
+        for (Partnership partnership : partnershipsByUniv) {
+            HomePartnershipDto homePartnershipDto = HomePartnershipDto.of(partnership);
+            homePartnershipListResponse.getList().add(homePartnershipDto);
+        }
+
+        return homePartnershipListResponse;
+    }
+
+    @Transactional
+    public PartnershipListResponse<HomePartnershipDto> getNewHomePartnership(University university) {
+        PartnershipListResponse<HomePartnershipDto> homePartnershipListResponse = new PartnershipListResponse<>();
+
+        List<Partnership> partnershipsByUniv = partnershipRepository.findAllNewByUnivAndTime(university, LocalDateTime.now());
         for (Partnership partnership : partnershipsByUniv) {
             HomePartnershipDto homePartnershipDto = HomePartnershipDto.of(partnership);
             homePartnershipListResponse.getList().add(homePartnershipDto);

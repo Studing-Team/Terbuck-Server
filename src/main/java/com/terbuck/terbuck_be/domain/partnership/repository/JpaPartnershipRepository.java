@@ -10,12 +10,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JpaPartnershipRepository implements PartnershipRepository {
+
+    private final static int newLimit = 7;
 
     private final EntityManager em;
 
@@ -24,11 +27,22 @@ public class JpaPartnershipRepository implements PartnershipRepository {
         em.persist(partnership);
     }
 
-    public List<Partnership> findAllByUnivAndCategory(University university) {
+    public List<Partnership> findAllByUniv(University university) {
         return em.createQuery(
                         "select p from Partnership p where p.university =: univ"
                         , Partnership.class
                 ).setParameter("univ", university)
+                .getResultList();
+    }
+
+    public List<Partnership> findAllNewByUnivAndTime(University university, LocalDateTime today) {
+        LocalDateTime sevenDaysAgo = today.minusDays(newLimit);
+
+        return em.createQuery(
+                        "select p from Partnership p where p.university = :univ and createdDate >= :sevenDaysAgo"
+                        , Partnership.class)
+                .setParameter("sevenDaysAgo", sevenDaysAgo)
+                .setParameter("univ", university)
                 .getResultList();
     }
 
