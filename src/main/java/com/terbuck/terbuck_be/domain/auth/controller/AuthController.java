@@ -27,7 +27,6 @@ public class AuthController {
 
     @GetMapping("/kakao")
     public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoLogin(@RequestParam String token) {
-//        String kakaoAccessToken = kakaoOAuthService.getAccessToken(token);
         UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(token);
 
         // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
@@ -42,6 +41,13 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(successMessage, loginResponse));
+    }
+
+    @GetMapping("/kakao/accessToken")
+    public String kakaoGetAccessToken(@RequestParam String code) {
+        String kakaoAccessToken = kakaoOAuthService.getAccessToken(code);
+
+        return "accessToken : " + kakaoAccessToken;
     }
 
     @GetMapping("/kakao/callback")
