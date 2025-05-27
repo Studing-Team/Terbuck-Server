@@ -52,18 +52,16 @@ public class AuthController {
     }
 
     @GetMapping("/apple")
-    public ResponseEntity<SuccessStatusResponse<LoginResponse>> appleLogin(@RequestParam String code, @RequestParam(required = false) String name) {
-        UserInfo userInfo = appleOAuthService.getAppleUserInfo(code, name);
+    public ResponseEntity<SuccessStatusResponse<LoginResponse>> appleLogin(@RequestBody AppleLoginRequest loginRequest) {
+        UserInfo userInfo = appleOAuthService.getAppleUserInfo(loginRequest.getCode(), loginRequest.getName());
 
         // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
         LoginResponse loginResponse = LoginResponse.of(authService.loginProcess(userInfo));
 
-        SuccessMessage successMessage;
-        if (loginResponse.getRedirect()) {
-            successMessage = SuccessMessage.NEED_MORE_INFO;
-        } else {
-            successMessage = SuccessMessage.LOGIN_SUCCESS;
-        }
+        SuccessMessage successMessage = loginResponse.getRedirect()
+                ? SuccessMessage.NEED_MORE_INFO
+                : SuccessMessage.LOGIN_SUCCESS;
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(successMessage, loginResponse));
