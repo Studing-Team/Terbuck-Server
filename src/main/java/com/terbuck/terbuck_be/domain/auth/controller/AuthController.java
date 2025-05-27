@@ -51,7 +51,7 @@ public class AuthController {
         return "code : " + code;
     }
 
-    @GetMapping("/apple")
+    @PostMapping("/apple")
     public ResponseEntity<SuccessStatusResponse<LoginResponse>> appleLogin(@RequestBody AppleLoginRequest loginRequest) {
         UserInfo userInfo = appleOAuthService.getAppleUserInfo(loginRequest.getCode(), loginRequest.getName());
 
