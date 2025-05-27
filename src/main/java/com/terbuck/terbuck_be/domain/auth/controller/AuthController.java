@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
-import com.terbuck.terbuck_be.domain.auth.dto.LoginResponse;
-import com.terbuck.terbuck_be.domain.auth.dto.ReIssueRequest;
-import com.terbuck.terbuck_be.domain.auth.dto.ReIssueResponse;
-import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
+import com.terbuck.terbuck_be.domain.auth.dto.*;
 import com.terbuck.terbuck_be.domain.auth.service.AppleOAuthService;
 import com.terbuck.terbuck_be.domain.auth.service.AuthService;
 import com.terbuck.terbuck_be.domain.auth.service.KakaoOAuthService;
@@ -25,19 +22,17 @@ public class AuthController {
     private final AppleOAuthService appleOAuthService;
     private final AuthService authService; // 내부 회원 가입/로그인 처리
 
-    @GetMapping("/kakao")
-    public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoLogin(@RequestParam String token) {
-        UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(token);
+    @PostMapping("/kakao")
+    public ResponseEntity<SuccessStatusResponse<LoginResponse>> kakaoLogin(@RequestBody KakaoLoginRequest loginRequest) {
+        UserInfo userInfo = kakaoOAuthService.getKakaoUserInfo(loginRequest.getToken());
 
         // 해당 회원 로그인 처리( 토큰 발급 ) + 신규 가입 회원인지 확인
         LoginResponse loginResponse = LoginResponse.of(authService.loginProcess(userInfo));
 
-        SuccessMessage successMessage;
-        if (loginResponse.getRedirect()) {
-            successMessage = SuccessMessage.NEED_MORE_INFO;
-        } else {
-            successMessage = SuccessMessage.LOGIN_SUCCESS;
-        }
+        SuccessMessage successMessage = loginResponse.getRedirect()
+                ? SuccessMessage.NEED_MORE_INFO
+                : SuccessMessage.LOGIN_SUCCESS;
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(successMessage, loginResponse));
