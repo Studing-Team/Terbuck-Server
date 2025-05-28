@@ -1,15 +1,13 @@
 package com.terbuck.terbuck_be.domain.shop.dto;
 
-import com.terbuck.terbuck_be.domain.shop.entity.Address;
-import com.terbuck.terbuck_be.domain.shop.entity.Benefit;
-import com.terbuck.terbuck_be.domain.shop.entity.Location;
-import com.terbuck.terbuck_be.domain.shop.entity.Shop;
+import com.terbuck.terbuck_be.domain.shop.entity.*;
 import lombok.Data;
 
 @Data
 public class MapShopDto {
 
     private Long shopId;
+    private ShopCategory category;
     private String name;
     private String thumbnailImage;
     private String address;
@@ -17,8 +15,9 @@ public class MapShopDto {
     private Double longitude;
     private Integer benefitCount;
 
-    public MapShopDto(Long shopId, String name, String thumbnailImage) {
+    public MapShopDto(Long shopId, ShopCategory category, String name, String thumbnailImage) {
         this.shopId = shopId;
+        this.category = category;
         this.name = name;
         this.thumbnailImage = thumbnailImage;
     }
@@ -27,6 +26,7 @@ public class MapShopDto {
 
         MapShopDto mapShopDto = new MapShopDto(
                 shop.getId(),
+                shop.getCategory(),
                 shop.getName(),
                 shop.getThumbnailImage()
         );

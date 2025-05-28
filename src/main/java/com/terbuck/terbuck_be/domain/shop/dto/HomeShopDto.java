@@ -1,9 +1,6 @@
 package com.terbuck.terbuck_be.domain.shop.dto;
 
-import com.terbuck.terbuck_be.domain.shop.entity.Address;
-import com.terbuck.terbuck_be.domain.shop.entity.Benefit;
-import com.terbuck.terbuck_be.domain.shop.entity.Detail;
-import com.terbuck.terbuck_be.domain.shop.entity.Shop;
+import com.terbuck.terbuck_be.domain.shop.entity.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,12 +10,14 @@ import java.util.List;
 public class HomeShopDto {
 
     private Long shopId;
+    private ShopCategory category;
     private String name;
     private String address;
     private List<BenefitDto> benefitList = new ArrayList<>();
 
-    public HomeShopDto(Long shopId, String name) {
+    public HomeShopDto(Long shopId, ShopCategory category, String name) {
         this.shopId = shopId;
+        this.category = category;
         this.name = name;
     }
 
@@ -26,6 +25,7 @@ public class HomeShopDto {
 
         HomeShopDto homeShopDto = new HomeShopDto(
                 shop.getId(),
+                shop.getCategory(),
                 shop.getName()
         );
 
