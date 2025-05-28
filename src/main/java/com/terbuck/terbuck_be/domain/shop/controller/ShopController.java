@@ -48,9 +48,14 @@ public class ShopController {
     public ResponseEntity<SuccessStatusResponse<ShopListResponse<MapShopDto>>> getMapShop(
             @RequestParam University university,
             @RequestParam(name = "category", required = false) List<ShopCategory> categoryList,
-            @RequestParam(required = false) double latitude,
-            @RequestParam(required = false) double longitude) {
-        ShopListResponse<MapShopDto> shopListResponse = shopService.getMapShop(university, categoryList, new Location(latitude, longitude));
+            @RequestParam(required = false) Double latitude,
+            @RequestParam(required = false) Double longitude) {
+        Location location = null;
+        if (latitude != null && longitude != null) {
+            location = new Location(latitude, longitude);
+        }
+
+        ShopListResponse<MapShopDto> shopListResponse = shopService.getMapShop(university, categoryList, location);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
