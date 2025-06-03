@@ -61,7 +61,7 @@ public class Member extends BaseTimeEntity {
 
     public void additionalInfo(SignInRequest request) {
         this.university = request.getUniversity();
-        this.policy = new Policy(request.getAgreedToService(), request.getAgreedToEssentialInfo(), request.getAgreedToOptional());
+        this.policy = new Policy(true, true, true);
         this.isSignedUp = true;
     }
 
