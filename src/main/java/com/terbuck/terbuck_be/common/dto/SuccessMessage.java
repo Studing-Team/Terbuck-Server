@@ -26,8 +26,12 @@ public enum SuccessMessage {
     STUDENTID_GET_SUCCESS(HttpStatus.OK.value(), "학생증 조회에 성공했습니다."),
     STUDENTID_DELETE_SUCCESS(HttpStatus.NO_CONTENT.value(), "학생증 삭제에 성공했습니다."),
 
-    AUTH_REISSUE_SUCCESS(HttpStatus.OK.value(), "리프레시 토큰을 통한 토큰 재발급에 성공했습니다.")
+    AUTH_REISSUE_SUCCESS(HttpStatus.OK.value(), "리프레시 토큰을 통한 토큰 재발급에 성공했습니다."),
+
+    INFO_UNIVERSITIES_GET_SUCCESS(HttpStatus.OK.value(), "대학교명 리스트 조회에 성공하였습니다."),
+    INFO_SHOP_CATEGORIES_GET_SUCCESS(HttpStatus.OK.value(),"업체 카테고리 리스트 조회에 성공하였습니다."),
     ;
+
     private final int status;
     private final String message;
 }
