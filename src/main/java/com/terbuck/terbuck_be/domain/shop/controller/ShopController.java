@@ -42,7 +42,7 @@ public class ShopController {
 
         List<ShopCategory> categoryList = new ArrayList<>();
         if (homeCategory == HomeCategory.먹고가기) {
-            categoryList.add(ShopCategory.음식점);
+            categoryList.add(ShopCategory.음식);
             categoryList.add(ShopCategory.카페);
             categoryList.add(ShopCategory.주점);
         }

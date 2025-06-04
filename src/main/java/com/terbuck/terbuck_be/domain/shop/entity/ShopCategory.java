@@ -3,7 +3,7 @@ package com.terbuck.terbuck_be.domain.shop.entity;
 public enum ShopCategory {
 
     //먹고가기
-    음식점,
+    음식,
     카페,
     주점,
 
