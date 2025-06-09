@@ -39,6 +39,13 @@ public class JpaMemberRepository implements MemberRepository {
         return member;
     }
 
+    public int deleteBy(Long id) {
+        String jpql = "DELETE FROM Member m WHERE m.id = :memberId";
+        return em.createQuery(jpql)
+                .setParameter("memberId", id)
+                .executeUpdate(); // ← 여기서 실행 & 결과 반환
+    }
+
     @Override
     public Long register(Member member) {
         em.persist(member);

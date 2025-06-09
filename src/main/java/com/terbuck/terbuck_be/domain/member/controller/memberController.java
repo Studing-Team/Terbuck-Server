@@ -25,16 +25,20 @@ public class memberController {
     private final S3ImageService imageService;
     private final SlackService slackService;
 
-    @PostMapping("/signin")
-    public ResponseEntity<SuccessStatusResponse<?>> signIn(
-            @RequestBody @Valid SignInRequest signInRequest,
+    @DeleteMapping
+    public ResponseEntity<?> deleteMember(
             @AuthenticationPrincipal Long userId
     ) {
-        memberService.signIn(userId, signInRequest);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(SuccessStatusResponse.of(SuccessMessage.SIGN_IN_SUCCESS));
+        int deletedCount = memberService.deleteMember(userId);
+        if (deletedCount > 0) {
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body(SuccessStatusResponse.of(SuccessMessage.MEMBER_DELETED));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .build();
+        }
     }
 
     @PatchMapping("/univ")
@@ -47,6 +51,18 @@ public class memberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.UNIV_UPDATE_SUCCESS));
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<SuccessStatusResponse<?>> signIn(
+            @RequestBody @Valid SignInRequest signInRequest,
+            @AuthenticationPrincipal Long userId
+    ) {
+        memberService.signIn(userId, signInRequest);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.SIGN_IN_SUCCESS));
     }
 
     @GetMapping("/studentID")

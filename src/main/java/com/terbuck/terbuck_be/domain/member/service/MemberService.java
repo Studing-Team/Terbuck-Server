@@ -33,6 +33,11 @@ public class MemberService {
     }
 
     @Transactional
+    public int deleteMember(Long id) {
+        return repository.deleteBy(id);
+    }
+
+    @Transactional
     public void signIn(Long userId, SignInRequest signinRequest) {
         Member member = repository.findBy(userId);
         member.additionalInfo(signinRequest);
