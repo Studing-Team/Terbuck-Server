@@ -16,6 +16,7 @@ public class ShopResponse {
     private String address;
     private Integer benefitCount;
     private List<BenefitDto> benefitList = new ArrayList<>();
+    private List<UsageDto> usagesList = new ArrayList<>();
 
     public ShopResponse(String name, String shopLink) {
         this.name = name;
@@ -44,10 +45,13 @@ public class ShopResponse {
             }
             benefitList.add(benefitDto);
         }
-
         shopResponse.setBenefitCount(shop.getBenefitList().size());
+
+        List<UsageDto> usagesList = shopResponse.getUsagesList();
+        for (Usages usages : shop.getUsagesList()) {
+            usagesList.add(new UsageDto(usages.getIntroduction()));
+        }
 
         return shopResponse;
     }
-
 }
