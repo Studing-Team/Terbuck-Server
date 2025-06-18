@@ -68,10 +68,8 @@ public class MemberService {
     @Transactional
     public StudentIDResponse getStudentID(Long userID) {
         Member member = repository.findBy(userID);
-        if (!member.getStudentID().getIsRegistered()) {
-            throw new BusinessException(ErrorCode.MEMBER_STUDENTID_NOT_REGISTERED);
-        }
-        return new StudentIDResponse(member.getName(), member.getStudentID().getStudentNumber(), member.getStudentID().getIdCardImage());
+
+        return StudentIDResponse.of(member);
     }
 
     @Transactional
