@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/device-token")
+@RequestMapping("/fcm")
 public class DeviceTokenController {
 
     private final FcmService fcmService;
 
-    @PostMapping
+    @PostMapping("/token")
     public ResponseEntity<SuccessStatusResponse<?>> register(@RequestBody String deviceToken,
                                                           @AuthenticationPrincipal Long userID) {
         fcmService.saveFcmToken(userID, deviceToken);
