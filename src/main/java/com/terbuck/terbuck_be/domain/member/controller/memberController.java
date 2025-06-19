@@ -43,6 +43,7 @@ public class memberController {
             @AuthenticationPrincipal Long userId
     ) {
         memberService.updateUniv(userId, patchUnivRequest.getUniversity());
+        memberService.deleteStudentID(userId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
