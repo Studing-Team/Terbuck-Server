@@ -38,6 +38,8 @@ public class Member extends BaseTimeEntity {
 
     private String refreshToken;
 
+    private String fcmDeviceToken;
+
     @Embedded
     private StudentID studentID;
 
@@ -71,5 +73,8 @@ public class Member extends BaseTimeEntity {
 
     public void updateStudentID(String studentIDImageURL, String studentNumber) {
         this.studentID = new StudentID(false, studentNumber, studentIDImageURL);
+    }
+    public void updateFcmDeviceToken(String token) {
+        this.fcmDeviceToken = token;
     }
 }
