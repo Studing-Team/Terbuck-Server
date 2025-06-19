@@ -7,7 +7,7 @@ import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
-import com.terbuck.terbuck_be.domain.slack.service.SlackService;
+import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

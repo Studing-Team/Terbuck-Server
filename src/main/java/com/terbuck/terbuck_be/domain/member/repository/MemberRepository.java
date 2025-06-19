@@ -5,7 +5,9 @@ import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.entity.StudentID;
 
-public interface MemberRepository {
+import java.util.List;
+
+public interface MemberRepository{
 
     // 회원 가입
     Long register(Member member);
@@ -17,4 +19,7 @@ public interface MemberRepository {
     Member findBy(Long id);
 
     Member findBy(UserInfo userInfo);
+
+    List<Member> findAll();
+
 }
