@@ -1,4 +1,4 @@
-package com.terbuck.terbuck_be.domain.slack.service;
+package com.terbuck.terbuck_be.domain.infrastructure.slack.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terbuck.terbuck_be.common.exception.BusinessException;

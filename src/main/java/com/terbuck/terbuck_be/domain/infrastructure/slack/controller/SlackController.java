@@ -1,6 +1,8 @@
-package com.terbuck.terbuck_be.domain.slack.controller;
+package com.terbuck.terbuck_be.domain.infrastructure.slack.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.terbuck.terbuck_be.domain.infrastructure.fcm.service.FcmService;
+import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +19,11 @@ import java.util.Map;
 public class SlackController {
 
     private final MemberService memberService;
+    private final FcmService fcmService;
 
     @PostMapping("/studentID")
     public ResponseEntity<String> handleSlackAction(@RequestParam("payload") String payload) {
         try {
-            log.info("Slack payload raw received: {}", payload);
-
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> payloadMap = objectMapper.readValue(payload, Map.class);
 
@@ -40,6 +41,18 @@ public class SlackController {
                 memberService.enableStudentID(userId);
             } else {
                 memberService.rejectStudentID(userId);
+            }
+
+            Member member = memberService.findMemberBy(userId);
+
+            String fcmToken = member.getFcmDeviceToken();
+            if (fcmToken != null && !fcmToken.isBlank()) {
+                String title = "학생증 인증 결과";
+                String body = approve ? "학생증 인증이 승인되었습니다." : "학생증 인증이 반려되었습니다.";
+                fcmService.sendPush(fcmToken, title, body);
+                log.info("푸시 알림 전송 완료: {}", fcmToken);
+            } else {
+                log.warn("푸시 알림 전송 실패 - FCM 토큰 없음 (userId: {})", userId);
             }
 
             return ResponseEntity.ok("Action processed successfully");
