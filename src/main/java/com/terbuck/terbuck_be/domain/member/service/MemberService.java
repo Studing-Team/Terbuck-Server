@@ -1,10 +1,13 @@
 package com.terbuck.terbuck_be.domain.member.service;
 
 import com.terbuck.terbuck_be.common.enums.Role;
+import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
+import com.terbuck.terbuck_be.domain.auth.service.AppleOAuthService;
+import com.terbuck.terbuck_be.domain.auth.service.KakaoOAuthService;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
@@ -20,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final JpaMemberRepository repository;
-    private final S3ImageService imageService;
+    private final KakaoOAuthService kakaoOAuthService;
 
     @Transactional
     public Member findMemberBy(UserInfo userInfo) {
@@ -33,8 +36,17 @@ public class MemberService {
     }
 
     @Transactional
-    public int deleteMember(Long id) {
-        return repository.deleteBy(id);
+    public void deleteMember(Long id) {
+        Member member = repository.findBy(id);
+
+        repository.delete(member);
+        socialUnlink(member);
+    }
+
+    private void socialUnlink(Member member) {
+        if ( member.getSocialType() == SocialType.KAKAO){
+            kakaoOAuthService.unlink(member.getSocialId());
+        }
     }
 
     @Transactional

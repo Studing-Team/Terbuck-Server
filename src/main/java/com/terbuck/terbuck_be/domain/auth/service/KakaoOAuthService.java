@@ -35,6 +35,9 @@ public class KakaoOAuthService {
     @Value("${kakao.user-info-uri}")
     private String userInfoUri;
 
+    @Value("${kakao.admin-key}")
+    private String kakaoAdminKey;
+
     public String getAccessToken(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -81,6 +84,26 @@ public class KakaoOAuthService {
             return new UserInfo(kakaoId, nickname, SocialType.KAKAO);
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.AUTH_KAKAO_USERINFO_PARSING_FAIL);
+        }
+    }
+
+    public void unlink(String kakaoUserId) {
+        String url = "https://kapi.kakao.com/v1/user/unlink";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK " + kakaoAdminKey);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("target_id_type", "user_id");
+        params.add("target_id", kakaoUserId);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        try {
+            restTemplate.postForEntity(url, request, String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("카카오 unlink 실패: " + e.getMessage(), e);
         }
     }
 }

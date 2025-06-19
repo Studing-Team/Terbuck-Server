@@ -3,11 +3,11 @@ package com.terbuck.terbuck_be.domain.member.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
+import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
 import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
-import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,17 +29,13 @@ public class memberController {
     public ResponseEntity<?> deleteMember(
             @AuthenticationPrincipal Long userId
     ) {
-        int deletedCount = memberService.deleteMember(userId);
-        if (deletedCount > 0) {
-            return ResponseEntity
-                    .status(HttpStatus.NO_CONTENT)
-                    .body(SuccessStatusResponse.of(SuccessMessage.MEMBER_DELETED));
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
+        memberService.deleteMember(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(SuccessStatusResponse.of(SuccessMessage.MEMBER_DELETED));
     }
+
 
     @PatchMapping("/univ")
     public ResponseEntity<SuccessStatusResponse<?>> updateUniv(
