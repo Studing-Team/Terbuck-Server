@@ -1,6 +1,7 @@
 package com.terbuck.terbuck_be.domain.infrastructure.slack.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,10 @@ public class SlackService {
     @Value("${slack.webhook.url}")
     private String slackWebhookUrl;
 
-    public void sendStudentIdUpdateMessage(Long userId, String name, String studentNumber, String socialName, String imageUrl) {
+    public void sendStudentIdUpdateMessage(Long userId, String name, String studentNumber, String socialName, String imageUrl, University university) {
         try {
             Map<String, Object> payload = new HashMap<>();
-            payload.put("blocks", buildBlocks(userId, name, studentNumber, socialName, imageUrl));
+            payload.put("blocks", buildBlocks(userId, name, studentNumber, socialName, imageUrl, university));
 
             log.info("payload : {}", payload);
 
@@ -54,7 +55,7 @@ public class SlackService {
         }
     }
 
-    private List<Map<String, Object>> buildBlocks(Long userId, String name, String studentNumber, String socialName, String imageUrl) {
+    private List<Map<String, Object>> buildBlocks(Long userId, String name, String studentNumber, String socialName, String imageUrl, University university) {
         List<Map<String, Object>> blocks = new ArrayList<>();
 
         // [1] 텍스트 블록
@@ -62,7 +63,7 @@ public class SlackService {
         textSection.put("type", "section");
         textSection.put("text", Map.of(
                 "type", "mrkdwn",
-                "text", "*이름:* " + name + "\n*학번:* " + studentNumber + "\n*계정 소유자 이름:* " + socialName
+                "text", "*이름:* " + name + "\n*학번:* " + studentNumber + "\n*계정 소유자 이름:* " + socialName + "\n*대학교명:* " + university
         ));
         blocks.add(textSection);
 

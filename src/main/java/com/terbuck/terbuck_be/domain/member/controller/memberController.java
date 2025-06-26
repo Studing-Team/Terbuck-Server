@@ -7,6 +7,7 @@ import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
 import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
+import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -83,8 +84,8 @@ public class memberController {
         String imageURL = imageService.uploadStudentIDImage(image);
 
         memberService.updateStudentID(userId, imageURL, studentNumber);
-        String socialName = memberService.findMemberBy(userId).getName();
-        slackService.sendStudentIdUpdateMessage(userId, name, studentNumber, socialName, imageURL);
+        Member member = memberService.findMemberBy(userId);
+        slackService.sendStudentIdUpdateMessage(userId, name, studentNumber, member.getName(), imageURL, member.getUniversity());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
