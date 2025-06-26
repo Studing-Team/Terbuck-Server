@@ -5,6 +5,7 @@ import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
+import com.terbuck.terbuck_be.domain.shop.entity.Benefit;
 import com.terbuck.terbuck_be.domain.shop.entity.Location;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,7 +29,15 @@ public class ShopService {
     public ShopListResponse<HomeShopDto> getHomeShop(University university, List<ShopCategory> categoryList, Location location) {
         ShopListResponse<HomeShopDto> homeShopListResponse = new ShopListResponse<>();
 
+        // shop과 Benefit 패치 조인 조회
         List<Shop> shopsByUniv = repository.findAllByUnivAndCategoryAndLocation(university, categoryList, location);
+        // Benefit 리스트의 각 Detail들 조회
+        List<Long> benefitIds = shopsByUniv.stream()
+                .flatMap(s -> s.getBenefitList().stream())
+                .map(Benefit::getId)
+                .collect(Collectors.toList());
+        repository.findAllWithDetails(benefitIds);
+
         for (Shop shop : shopsByUniv) {
             HomeShopDto homeShopDto = HomeShopDto.of(shop);
             homeShopListResponse.getList().add(homeShopDto);

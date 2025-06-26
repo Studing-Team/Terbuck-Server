@@ -3,6 +3,7 @@ package com.terbuck.terbuck_be.domain.shop.repository;
 import com.terbuck.terbuck_be.common.enums.University;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
+import com.terbuck.terbuck_be.domain.shop.entity.Benefit;
 import com.terbuck.terbuck_be.domain.shop.entity.Location;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
@@ -12,6 +13,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,7 +51,7 @@ public class JpaShopRepository implements ShopRepository {
 
     @Override
     public List<Shop> findAllByUnivAndCategoryAndLocation(University university, List<ShopCategory> categoryList, Location location) {
-        StringBuilder jpql = new StringBuilder("SELECT s FROM Shop s WHERE s.university = :univ");
+        StringBuilder jpql = new StringBuilder("SELECT DISTINCT s FROM Shop s LEFT JOIN FETCH s.benefitList WHERE s.university = :univ ");
 
         if (categoryList != null && !categoryList.isEmpty()) {
             jpql.append(" AND s.category IN :categoryList");
@@ -93,6 +96,12 @@ public class JpaShopRepository implements ShopRepository {
         } catch (NoResultException e) {
             throw new EntityNotFoundException("해당 업체를 찾을 수 없습니다.");
         }
+    }
+
+    public List<Benefit> findAllWithDetails(@Param("benefitIds") List<Long> benefitIds){
+        return em.createQuery("SELECT DISTINCT b FROM Benefit b LEFT JOIN FETCH b.detailList WHERE b.id IN :benefitIds", Benefit.class)
+                .setParameter("benefitIds", benefitIds)
+                .getResultList();
     }
 
 }
