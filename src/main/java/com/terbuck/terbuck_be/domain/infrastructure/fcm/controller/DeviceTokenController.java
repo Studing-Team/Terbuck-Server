@@ -2,6 +2,7 @@ package com.terbuck.terbuck_be.domain.infrastructure.fcm.controller;
 
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
+import com.terbuck.terbuck_be.domain.infrastructure.fcm.dto.DeviceTokenRequest;
 import com.terbuck.terbuck_be.domain.infrastructure.fcm.service.FcmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,9 @@ public class DeviceTokenController {
     private final FcmService fcmService;
 
     @PostMapping("/token")
-    public ResponseEntity<SuccessStatusResponse<?>> register(@RequestBody String deviceToken,
+    public ResponseEntity<SuccessStatusResponse<?>> register(@RequestBody DeviceTokenRequest deviceToken,
                                                           @AuthenticationPrincipal Long userID) {
-        fcmService.saveFcmToken(userID, deviceToken);
+        fcmService.saveFcmToken(userID, deviceToken.getDeviceToken());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.FCM_DEVICE_TOKEN_REGISTER_SUCCESS));
