@@ -4,6 +4,7 @@ import com.terbuck.terbuck_be.domain.infrastructure.fcm.service.FcmService;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,13 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class DailyPushScheduler {
+
+    @Value("${fcm.title}")
+    private String title;
+
+    @Value("${fcm.message}")
+    private String message;
+
 
     private final FcmService fcmService;
     private final MemberRepository memberRepository;
@@ -24,7 +32,7 @@ public class DailyPushScheduler {
         for (Member member : members) {
             String token = member.getFcmDeviceToken();
             if (token != null && !token.isBlank()) {
-                fcmService.sendPush(token, "오늘의 알림", "매일 오후 6시에 보내는 알림입니다.");
+                fcmService.sendPush(token, title, message);
             }
         }
     }
