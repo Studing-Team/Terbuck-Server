@@ -2,7 +2,7 @@ name: Deploy to EC2 (dev)
 
 on:
   push:
-    branches: [ "dev" ]  # dev 브랜치에 push될 때만 실행
+    branches: [ "dev" ]
 
 jobs:
   deploy:
@@ -20,6 +20,13 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         script: |
           cd /home/ubuntu/Terbuck-Server
+          
+          echo "📦 Pulling latest code..."
           git pull origin dev
+          
+          echo "🔐 Restoring firebase-key.json..."
+          mkdir -p src/main/resources/firebase
+          echo '${{ secrets.FIREBASE_KEY_JSON }}' > src/main/resources/firebase/firebase-key.json
+
           echo "🚀 Deployed commit: $(git rev-parse HEAD)"
           ./deploy.sh
