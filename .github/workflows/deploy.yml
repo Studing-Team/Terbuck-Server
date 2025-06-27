@@ -18,7 +18,6 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_KEY }}
-        envs: FIREBASE_KEY_JSON
         script: |
           cd /home/ubuntu/Terbuck-Server
           
@@ -27,7 +26,7 @@ jobs:
           
           echo "🔐 Restoring firebase-key.json..."
           mkdir -p src/main/resources/firebase
-          echo "$FIREBASE_KEY_JSON" > src/main/resources/firebase/firebase-key.json
+          echo '${{ secrets.FIREBASE_KEY_JSON }}' > src/main/resources/firebase/firebase-key.json
 
           echo "🚀 Deployed commit: $(git rev-parse HEAD)"
           ./deploy.sh
