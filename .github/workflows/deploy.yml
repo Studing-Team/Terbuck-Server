@@ -27,6 +27,7 @@ jobs:
           
           echo "🔐 Restoring firebase-key.json..."
           mkdir -p src/main/resources/firebase
+          echo "$FIREBASE_KEY_JSON"
           echo "$FIREBASE_KEY_JSON" > src/main/resources/firebase/firebase-key.json
 
           echo "🚀 Deployed commit: $(git rev-parse HEAD)"
