@@ -1,6 +1,5 @@
 package com.terbuck.terbuck_be.common.dto;
 
-import com.google.api.Http;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -32,11 +31,10 @@ public enum SuccessMessage {
     AUTH_REISSUE_SUCCESS(HttpStatus.OK.value(), "리프레시 토큰을 통한 토큰 재발급에 성공했습니다."),
 
     INFO_UNIVERSITIES_GET_SUCCESS(HttpStatus.OK.value(), "대학교명 리스트 조회에 성공하였습니다."),
-    INFO_SHOP_CATEGORIES_GET_SUCCESS(HttpStatus.OK.value(),"업체 카테고리 리스트 조회에 성공하였습니다."),
+    INFO_SHOP_CATEGORIES_GET_SUCCESS(HttpStatus.OK.value(), "업체 카테고리 리스트 조회에 성공하였습니다."),
 
     FCM_DEVICE_TOKEN_REGISTER_SUCCESS(HttpStatus.OK.value(), "FCM 디바이스 토큰 등록에 성공하였습니다."),
-
-    ;
+    FCM_MANUAL_PUSH_MESSAGE_SUCCESS(HttpStatus.OK.value(), "수동 FCM 푸시 메시지 전송에 성공하였습니다.");
 
     private final int status;
     private final String message;

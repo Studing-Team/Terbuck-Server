@@ -22,6 +22,11 @@ public class FcmService {
         member.updateFcmDeviceToken(token);
     }
 
+    public void ManualSendPush(Long id, String title, String body) {
+        Member member = repository.findBy(id);
+        sendPush(member.getFcmDeviceToken(), title, body);
+    }
+
     public void sendPush(String token, String title, String body) {
         Notification notification = Notification.builder()
                 .setTitle(title)
