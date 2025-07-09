@@ -25,14 +25,26 @@ public class DailyPushScheduler {
     private final MemberRepository memberRepository;
 
     // 매일 오후 6시
-    @Scheduled(cron = "0 0 18 * * *", zone = "Asia/Seoul")
-    public void sendDailyPush() {
+    @Scheduled(cron = "0 30 17 * * *", zone = "Asia/Seoul")
+    public void sendDailyDinnerPush() {
         List<Member> members = memberRepository.findAll();
 
         for (Member member : members) {
             String token = member.getFcmDeviceToken();
             if (token != null && !token.isBlank()) {
-                fcmService.sendPush(token, title, message);
+                fcmService.sendPush(token, "오늘 하루도 고생했어요 ☘" , "제휴 혜택 놓치지 말고 지금 바로 확인하세요 💡");
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 50 11 * * *", zone = "Asia/Seoul")
+    public void sendDailyLunchPush() {
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            String token = member.getFcmDeviceToken();
+            if (token != null && !token.isBlank()) {
+                fcmService.sendPush(token, "배고픈 점심 시간이에요 🍙", "지금 학교 근처 제휴 혜택 확인하고 할인 챙겨가세요!");
             }
         }
     }
