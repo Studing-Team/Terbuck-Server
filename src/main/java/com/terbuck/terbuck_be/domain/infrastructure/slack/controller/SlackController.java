@@ -47,8 +47,8 @@ public class SlackController {
 
             String fcmToken = member.getFcmDeviceToken();
             if (fcmToken != null && !fcmToken.isBlank()) {
-                String title = "학생증 등록 결과가 나왔어요 ✅";
-                String body = approve ? "이제 제휴 매장에서 학생증 화면 보여주면 혜택을 바로 받을 수 있어요!" : "학생증 인증이 반려되었습니다. 알맞은 정보로 다시 신청부탁드려요!";
+                String title = approve ? "학생증 등록 결과가 나왔어요 ✅" : "학생증 인증이 반려되었어요 😢";
+                String body = approve ? "이제 제휴 매장에서 학생증 화면 보여주면 혜택을 바로 받을 수 있어요!" : "학생증 정보가 잘 보이지 않을 경우 반려될 수 있어요. 다시 등록해주시면 빠르게 확인해드릴게요!";
                 fcmService.sendPush(fcmToken, title, body);
                 log.info("푸시 알림 전송 완료: {}", fcmToken);
             } else {
