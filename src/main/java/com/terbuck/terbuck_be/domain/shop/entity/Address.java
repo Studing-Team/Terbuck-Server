@@ -30,16 +30,18 @@ public class Address {
 
     public static String StringOf(Address address) {
         StringBuilder sb = new StringBuilder();
-        sb.append(address.getRegion())
-                .append(" ")
-                .append(address.getCity())
-                .append(" ")
-                .append(address.getRoad())
-                .append(" ")
-                .append(address.getBuildingNumber())
-                .append(" ")
-                .append(address.getEtc());
 
-        return sb.toString();
+        if (address.getRegion() != null)
+            sb.append(address.getRegion()).append(" ");
+        if (address.getCity() != null)
+            sb.append(address.getCity()).append(" ");
+        if (address.getRoad() != null)
+            sb.append(address.getRoad()).append(" ");
+        if (address.getBuildingNumber() != null)
+            sb.append(address.getBuildingNumber()).append(" ");
+        if (address.getEtc() != null)
+            sb.append(address.getEtc());
+
+        return sb.toString().trim(); // 마지막 공백 제거
     }
 }
