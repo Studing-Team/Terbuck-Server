@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public abstract class Image {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String imageURL;
