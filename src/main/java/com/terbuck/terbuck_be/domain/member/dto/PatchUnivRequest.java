@@ -1,12 +1,10 @@
 package com.terbuck.terbuck_be.domain.member.dto;
 
-import com.terbuck.terbuck_be.common.enums.University;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class PatchUnivRequest {
-
-    private University university;
+    private String university;
 }
