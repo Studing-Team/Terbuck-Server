@@ -1,6 +1,7 @@
 package com.terbuck.terbuck_be.domain.image.service;
 
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
 import com.terbuck.terbuck_be.domain.partnership.entity.PartnershipImage;
 import com.terbuck.terbuck_be.domain.partnership.repository.JpaPartnershipRepository;
@@ -28,6 +29,7 @@ public class S3ImageService {
     private final S3Client s3Client;
     private final ShopRepository shopRepository;
     private final JpaPartnershipRepository jpaPartnershipRepository;
+    private final UniversityRepository universityRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -62,8 +64,9 @@ public class S3ImageService {
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, region, fileName);
     }
 
-    public void updateAllShopImagesByUniversity(University university) {
-        String universityPrefix = String.format("shop/%s/", university);
+    public void updateAllShopImagesByUniversity(Long universityId) {
+        University university = universityRepository.findById(universityId).orElseThrow(() -> new IllegalArgumentException("University not found"));
+        String universityPrefix = String.format("shop/%s/", university.getName());
 
         // 대학교 폴더 하위의 모든 객체 가져오기
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
@@ -88,7 +91,7 @@ public class S3ImageService {
     }
 
     private void updateShopImages(University university, String shopName) {
-        String prefix = String.format("shop/%s/%s/", university, shopName);
+        String prefix = String.format("shop/%s/%s/", university.getName(), shopName);
 
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
                 .bucket(bucket)
@@ -112,8 +115,9 @@ public class S3ImageService {
         }
     }
 
-    public void updateAllPartnershipImagesByUniversity(University university) {
-        String partnershipUniversityPrefix = String.format("partnership/%s/", university);
+    public void updateAllPartnershipImagesByUniversity(Long universityId) {
+        University university = universityRepository.findById(universityId).orElseThrow(() -> new IllegalArgumentException("University not found"));
+        String partnershipUniversityPrefix = String.format("partnership/%s/", university.getName());
 
         // 대학교 폴더 하위의 모든 객체 가져오기
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
@@ -137,7 +141,7 @@ public class S3ImageService {
     }
 
     private void updatePartnershipImages(University university, String partnershipName) {
-        String prefix = String.format("partnership/%s/%s/", university, partnershipName);
+        String prefix = String.format("partnership/%s/%s/", university.getName(), partnershipName);
 
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
                 .bucket(bucket)

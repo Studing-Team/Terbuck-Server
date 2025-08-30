@@ -2,7 +2,7 @@ package com.terbuck.terbuck_be.domain.shop.controller;
 
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
@@ -30,7 +30,7 @@ public class ShopController {
 
     @GetMapping("/home")
     public ResponseEntity<SuccessStatusResponse<ShopListResponse<HomeShopDto>>> getHomeShop(
-            @RequestParam University university,
+            @RequestParam String university,
             @RequestParam(name = "category") HomeCategory homeCategory,
             @RequestParam(required = false) Double latitude,
             @RequestParam(required = false) Double longitude) {
@@ -63,7 +63,7 @@ public class ShopController {
 
     @GetMapping("/map")
     public ResponseEntity<SuccessStatusResponse<ShopListResponse<MapShopDto>>> getMapShop(
-            @RequestParam University university,
+            @RequestParam String university,
             @RequestParam(name = "category", required = false) List<ShopCategory> categoryList,
             @RequestParam(required = false) Double latitude,
             @RequestParam(required = false) Double longitude) {

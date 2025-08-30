@@ -1,7 +1,7 @@
 package com.terbuck.terbuck_be.domain.partnership.repository;
 
 
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
 
 public interface PartnershipRepository {

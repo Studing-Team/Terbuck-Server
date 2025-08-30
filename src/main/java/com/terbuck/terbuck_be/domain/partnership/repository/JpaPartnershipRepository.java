@@ -1,6 +1,6 @@
 package com.terbuck.terbuck_be.domain.partnership.repository;
 
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;

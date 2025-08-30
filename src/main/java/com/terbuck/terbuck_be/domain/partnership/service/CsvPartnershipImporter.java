@@ -1,7 +1,8 @@
 package com.terbuck.terbuck_be.domain.partnership.service;
 
 import com.opencsv.CSVReader;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.partnership.entity.Institution;
 import com.terbuck.terbuck_be.domain.partnership.entity.PartnerCategory;
 import com.terbuck.terbuck_be.domain.partnership.entity.Partnership;
@@ -22,11 +23,13 @@ import java.util.Arrays;
 public class CsvPartnershipImporter {
 
     private final JpaPartnershipRepository partnershipRepository;
+    private final UniversityRepository universityRepository;
 
     private static final int COLUMN_LENGTH = 5;
 
     @Transactional
-    public void importFromCsv(MultipartFile file, University file_univ) {
+    public void importFromCsv(MultipartFile file, String universityName) {
+        University university = universityRepository.findByName(universityName).orElseThrow(() -> new IllegalArgumentException("University not found"));
 
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String[] cols;
@@ -57,7 +60,7 @@ public class CsvPartnershipImporter {
 
                 Partnership partnership = Partnership.builder()
                         .name(name)
-                        .university(file_univ)
+                        .university(university)
                         .category(partnerCategory)
                         .institution(institution)
                         .detail(detail)

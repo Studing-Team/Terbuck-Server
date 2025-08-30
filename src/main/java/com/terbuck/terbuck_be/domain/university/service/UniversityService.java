@@ -19,7 +19,7 @@ public class UniversityService {
     private final UniversityRepository universityRepository;
 
     public UniversityResponse createUniversity(UniversityRequest request) {
-        University university = new University(request.getName());
+        University university = new University(request.getUniversity());
         universityRepository.save(university);
         return UniversityResponse.from(university);
     }
@@ -41,7 +41,7 @@ public class UniversityService {
     public UniversityResponse updateUniversity(Long id, UniversityRequest request) {
         University university = universityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("University not found"));
-        university.update(request.getName());
+        university.update(request.getUniversity());
         return UniversityResponse.from(university);
     }
 

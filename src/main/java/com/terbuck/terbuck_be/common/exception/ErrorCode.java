@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.common.exception;
 
+import com.google.api.Http;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,9 @@ public enum ErrorCode {
 
     SHOP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 업체가 존재하지 않습니다."),
 
-    PARTNERSHIP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 파트너십이 존재하지 않습니다.")
+    PARTNERSHIP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 파트너십이 존재하지 않습니다."),
+
+    UNIVERSITY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 대학교가 존재하지 않습니다.")
     ;
 
     private final int status;

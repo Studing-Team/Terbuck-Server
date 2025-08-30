@@ -2,7 +2,7 @@ package com.terbuck.terbuck_be.domain.partnership.controller;
 
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
-import com.terbuck.terbuck_be.common.enums.University;
+
 import com.terbuck.terbuck_be.domain.partnership.dto.HomePartnershipDto;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipListResponse;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipResponse;
@@ -22,7 +22,7 @@ public class PartnershipController {
 
     @GetMapping("/home")
     public ResponseEntity<SuccessStatusResponse<PartnershipListResponse<HomePartnershipDto>>> getHomeShop(
-            @RequestParam University university) {
+            @RequestParam String university) {
         PartnershipListResponse<HomePartnershipDto> homePartnershipList = partnershipService.getHomePartnership(university);
 
         return ResponseEntity
@@ -32,7 +32,7 @@ public class PartnershipController {
 
     @GetMapping("/home_new")
     public ResponseEntity<SuccessStatusResponse<PartnershipListResponse<HomePartnershipDto>>> getNewHomeShop(
-            @RequestParam University university) {
+            @RequestParam String university) {
         PartnershipListResponse<HomePartnershipDto> homePartnershipList = partnershipService.getNewHomePartnership(university);
 
         return ResponseEntity
