@@ -3,7 +3,9 @@ package com.terbuck.terbuck_be.domain.university.service;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityRequest;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
 import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.domain.Region;
 import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
+import com.terbuck.terbuck_be.domain.university.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +19,12 @@ import java.util.stream.Collectors;
 public class UniversityService {
 
     private final UniversityRepository universityRepository;
+    private final RegionRepository regionRepository;
 
     public UniversityResponse createUniversity(UniversityRequest request) {
-        University university = new University(request.getUniversity());
+        Region region = regionRepository.findByName(request.getRegionName())
+                .orElseThrow(() -> new IllegalArgumentException("Region not found"));
+        University university = new University(request.getUniversityName(), region);
         universityRepository.save(university);
         return UniversityResponse.from(university);
     }
@@ -41,7 +46,9 @@ public class UniversityService {
     public UniversityResponse updateUniversity(Long id, UniversityRequest request) {
         University university = universityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("University not found"));
-        university.update(request.getUniversity());
+        Region region = regionRepository.findByName(request.getRegionName())
+                .orElseThrow(() -> new IllegalArgumentException("Region not found"));
+        university.update(request.getUniversityName(), region);
         return UniversityResponse.from(university);
     }
 

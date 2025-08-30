@@ -6,5 +6,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UniversityRequest {
-    private String university;
+    private String universityName;
+    private String regionName;
 }
