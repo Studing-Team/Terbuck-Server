@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class UniversityRequest {
     private String universityName;
     private String regionName;
+    private boolean isRegistered;
 }

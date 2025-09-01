@@ -25,13 +25,23 @@ public class University {
     @JoinColumn(name = "region_id")
     private Region region;
 
+    private boolean isRegistered = false;
+
     public University(String name, Region region) {
         this.name = name;
         this.region = region;
+        this.isRegistered = false;
     }
 
-    public void update(String name, Region region) {
+    public University(String name, Region region, boolean isRegistered) {
         this.name = name;
         this.region = region;
+        this.isRegistered = isRegistered;
+    }
+
+    public void update(String name, Region region, boolean isRegistered) {
+        this.name = name;
+        this.region = region;
+        this.isRegistered = isRegistered;
     }
 }
