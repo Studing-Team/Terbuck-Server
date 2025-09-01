@@ -1,13 +1,18 @@
 package com.terbuck.terbuck_be.domain.university.controller;
 
+import com.terbuck.terbuck_be.common.dto.SuccessMessage;
+import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
+import com.terbuck.terbuck_be.domain.university.dto.OpenRequestResponse;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityRequest;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
 import com.terbuck.terbuck_be.domain.university.dto.RegionUniversityResponse;
+import com.terbuck.terbuck_be.domain.university.entity.OpenRequest;
 import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -47,5 +52,26 @@ public class UniversityController {
     @GetMapping("/by-region")
     public ResponseEntity<List<RegionUniversityResponse>> getAllUniversitiesGroupedByRegion() {
         return ResponseEntity.ok(universityService.getAllUniversitiesGroupedByRegion());
+    }
+
+    @GetMapping("/is-registered")
+    public ResponseEntity<Boolean> isUniversityRegistered(@RequestParam String universityName) {
+        return ResponseEntity.ok(universityService.isUniversityRegistered(universityName));
+    }
+
+    @PostMapping("/open")
+    public ResponseEntity<SuccessStatusResponse<OpenRequestResponse>> createOpenUniversityRequest(
+            @AuthenticationPrincipal Long memberId,
+            OpenRequest openRequest) {
+        OpenRequestResponse openRequestResponse = universityService.requestUniversityOpen(openRequest.getUniversityName(), memberId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.OPEN_REQUEST_SUCCESS, openRequestResponse));
+    }
+
+    @GetMapping("/open")
+    public ResponseEntity<Boolean> getOpenUniversityRequest(
+            @AuthenticationPrincipal Long memberId) {
+        return ResponseEntity.ok(universityService.checkAlreadyRequestOpen(memberId));
     }
 }

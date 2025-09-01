@@ -11,12 +11,14 @@ public class UniversityResponse {
     private Long id;
     private String name;
     private RegionResponse region;
+    private boolean isRegistered;
 
     public static UniversityResponse from(University university) {
         return UniversityResponse.builder()
                 .id(university.getId())
                 .name(university.getName())
                 .region(RegionResponse.from(university.getRegion()))
+                .isRegistered(university.isRegistered())
                 .build();
     }
 }

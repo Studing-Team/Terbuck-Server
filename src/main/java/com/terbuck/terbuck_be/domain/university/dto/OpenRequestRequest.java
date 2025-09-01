@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UniversityRequest {
+public class OpenRequestRequest {
     private String universityName;
-    private String regionName;
-    private boolean isRegistered;
 }
