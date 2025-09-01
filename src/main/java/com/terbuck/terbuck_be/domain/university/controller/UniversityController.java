@@ -2,10 +2,7 @@ package com.terbuck.terbuck_be.domain.university.controller;
 
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
-import com.terbuck.terbuck_be.domain.university.dto.OpenRequestResponse;
-import com.terbuck.terbuck_be.domain.university.dto.UniversityRequest;
-import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
-import com.terbuck.terbuck_be.domain.university.dto.RegionUniversityResponse;
+import com.terbuck.terbuck_be.domain.university.dto.*;
 import com.terbuck.terbuck_be.domain.university.entity.OpenRequest;
 import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
@@ -62,8 +59,8 @@ public class UniversityController {
     @PostMapping("/open")
     public ResponseEntity<SuccessStatusResponse<OpenRequestResponse>> createOpenUniversityRequest(
             @AuthenticationPrincipal Long memberId,
-            OpenRequest openRequest) {
-        OpenRequestResponse openRequestResponse = universityService.requestUniversityOpen(openRequest.getUniversityName(), memberId);
+            @RequestParam String universityName) {
+        OpenRequestResponse openRequestResponse = universityService.requestUniversityOpen(universityName, memberId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.OPEN_REQUEST_SUCCESS, openRequestResponse));

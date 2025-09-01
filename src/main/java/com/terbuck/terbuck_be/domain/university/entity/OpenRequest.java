@@ -20,11 +20,8 @@ public class OpenRequest {
 
     private Long memberId;
 
-    private LocalDateTime requestDate;
-
     public OpenRequest(String universityName, Long memberId) {
         this.universityName = universityName;
         this.memberId = memberId;
-        this.requestDate = LocalDateTime.now();
     }
 }
