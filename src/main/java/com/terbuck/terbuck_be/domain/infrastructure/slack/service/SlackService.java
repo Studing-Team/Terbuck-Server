@@ -100,5 +100,29 @@ public class SlackService {
         return blocks;
     }
 
+    public void sendMessage(String message) {
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("text", message);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(slackWebhookUrl, request, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Slack message sent successfully.");
+            } else {
+                log.error("Failed to send Slack message. Status: {}, Body: {}", response.getStatusCode(), response.getBody());
+                throw new RuntimeException("슬랙 메시지 전송 실패 : " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while sending Slack message.", e);
+            throw new BusinessException(ErrorCode.SLACK_MESSAGE_FAILED);
+        }
+    }
+
 }
 

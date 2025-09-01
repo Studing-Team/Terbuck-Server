@@ -2,6 +2,7 @@ package com.terbuck.terbuck_be.domain.member.service;
 
 import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.SocialType;
+import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
 import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
@@ -24,6 +25,7 @@ public class MemberService {
     private final JpaMemberRepository repository;
     private final KakaoOAuthService kakaoOAuthService;
     private final UniversityRepository universityRepository;
+    private final SlackService slackService;
 
     @Transactional
     public Member findMemberBy(UserInfo userInfo) {
@@ -55,6 +57,9 @@ public class MemberService {
         University university = universityRepository.findByName(signinRequest.getUniversity())
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         member.additionalInfo(university);
+
+        long memberCount = repository.count();
+        slackService.sendMessage("새로운 회원이 가입했습니다! \n현재 총 회원 수: " + memberCount + "명");
     }
 
     @Transactional

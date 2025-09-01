@@ -23,6 +23,10 @@ public class JpaMemberRepository implements MemberRepository {
                 .getResultList();
     }
 
+    public long count() {
+        return em.createQuery("SELECT COUNT(m) FROM Member m", Long.class).getSingleResult();
+    }
+
     @Override
     public Member findBy(Long id) {
         Member member = em.find(Member.class, id);
