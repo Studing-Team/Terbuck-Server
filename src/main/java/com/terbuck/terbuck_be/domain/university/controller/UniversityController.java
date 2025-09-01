@@ -2,6 +2,7 @@ package com.terbuck.terbuck_be.domain.university.controller;
 
 import com.terbuck.terbuck_be.domain.university.dto.UniversityRequest;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
+import com.terbuck.terbuck_be.domain.university.dto.RegionUniversityResponse;
 import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,10 @@ public class UniversityController {
     public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
         universityService.deleteUniversity(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-region")
+    public ResponseEntity<List<RegionUniversityResponse>> getAllUniversitiesGroupedByRegion() {
+        return ResponseEntity.ok(universityService.getAllUniversitiesGroupedByRegion());
     }
 }

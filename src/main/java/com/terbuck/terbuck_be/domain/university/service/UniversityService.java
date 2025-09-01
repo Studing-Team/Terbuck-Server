@@ -2,10 +2,12 @@ package com.terbuck.terbuck_be.domain.university.service;
 
 import com.terbuck.terbuck_be.domain.university.dto.UniversityRequest;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
+import com.terbuck.terbuck_be.domain.university.dto.RegionUniversityResponse;
 import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.university.domain.Region;
 import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.university.repository.RegionRepository;
+import com.terbuck.terbuck_be.domain.university.dto.RegionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,5 +56,21 @@ public class UniversityService {
 
     public void deleteUniversity(Long id) {
         universityRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RegionUniversityResponse> getAllUniversitiesGroupedByRegion() {
+        List<Region> regions = regionRepository.findAll();
+        return regions.stream()
+                .map(region -> {
+                    List<UniversityResponse> universitiesInRegion = universityRepository.findByRegion(region).stream()
+                            .map(UniversityResponse::from)
+                            .collect(Collectors.toList());
+                    return RegionUniversityResponse.builder()
+                            .region(RegionResponse.from(region))
+                            .universities(universitiesInRegion)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }
