@@ -1,0 +1,76 @@
+package com.terbuck.terbuck_be.domain.university.service;
+
+import com.terbuck.terbuck_be.domain.university.dto.UniversityRequest;
+import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
+import com.terbuck.terbuck_be.domain.university.dto.RegionUniversityResponse;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.domain.Region;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
+import com.terbuck.terbuck_be.domain.university.repository.RegionRepository;
+import com.terbuck.terbuck_be.domain.university.dto.RegionResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class UniversityService {
+
+    private final UniversityRepository universityRepository;
+    private final RegionRepository regionRepository;
+
+    public UniversityResponse createUniversity(UniversityRequest request) {
+        Region region = regionRepository.findByName(request.getRegionName())
+                .orElseThrow(() -> new IllegalArgumentException("Region not found"));
+        University university = new University(request.getUniversityName(), region);
+        universityRepository.save(university);
+        return UniversityResponse.from(university);
+    }
+
+    @Transactional(readOnly = true)
+    public UniversityResponse getUniversity(Long id) {
+        University university = universityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("University not found"));
+        return UniversityResponse.from(university);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UniversityResponse> getAllUniversities() {
+        return universityRepository.findAll().stream()
+                .map(UniversityResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public UniversityResponse updateUniversity(Long id, UniversityRequest request) {
+        University university = universityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("University not found"));
+        Region region = regionRepository.findByName(request.getRegionName())
+                .orElseThrow(() -> new IllegalArgumentException("Region not found"));
+        university.update(request.getUniversityName(), region);
+        return UniversityResponse.from(university);
+    }
+
+    public void deleteUniversity(Long id) {
+        universityRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RegionUniversityResponse> getAllUniversitiesGroupedByRegion() {
+        List<Region> regions = regionRepository.findAll();
+        return regions.stream()
+                .map(region -> {
+                    List<UniversityResponse> universitiesInRegion = universityRepository.findByRegion(region).stream()
+                            .map(UniversityResponse::from)
+                            .collect(Collectors.toList());
+                    return RegionUniversityResponse.builder()
+                            .region(RegionResponse.from(region))
+                            .universities(universitiesInRegion)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+}

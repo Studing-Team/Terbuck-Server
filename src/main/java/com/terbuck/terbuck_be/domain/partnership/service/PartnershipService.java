@@ -1,6 +1,9 @@
 package com.terbuck.terbuck_be.domain.partnership.service;
 
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.partnership.dto.HomePartnershipDto;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipListResponse;
 import com.terbuck.terbuck_be.domain.partnership.dto.PartnershipResponse;
@@ -18,9 +21,11 @@ import java.util.List;
 public class PartnershipService {
 
     private final JpaPartnershipRepository partnershipRepository;
+    private final UniversityRepository universityRepository;
 
     @Transactional
-    public PartnershipListResponse<HomePartnershipDto> getHomePartnership(University university) {
+    public PartnershipListResponse<HomePartnershipDto> getHomePartnership(String universityName) {
+        University university = universityRepository.findByName(universityName).orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         PartnershipListResponse<HomePartnershipDto> homePartnershipListResponse = new PartnershipListResponse<>();
 
         List<Partnership> partnershipsByUniv = partnershipRepository.findAllByUniv(university);
@@ -33,7 +38,8 @@ public class PartnershipService {
     }
 
     @Transactional
-    public PartnershipListResponse<HomePartnershipDto> getNewHomePartnership(University university) {
+    public PartnershipListResponse<HomePartnershipDto> getNewHomePartnership(String universityName) {
+        University university = universityRepository.findByName(universityName).orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         PartnershipListResponse<HomePartnershipDto> homePartnershipListResponse = new PartnershipListResponse<>();
 
         List<Partnership> partnershipsByUniv = partnershipRepository.findAllNewByUnivAndTime(university, LocalDateTime.now());

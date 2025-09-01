@@ -1,7 +1,10 @@
 package com.terbuck.terbuck_be.domain.shop.service;
 
 import com.opencsv.CSVReader;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.shop.entity.*;
 import com.terbuck.terbuck_be.domain.shop.repository.JpaShopRepository;
 import jakarta.persistence.EntityManager;
@@ -25,11 +28,15 @@ import java.util.regex.Pattern;
 public class CsvShopImporter {
 
     private final JpaShopRepository shopRepository;
+    private final UniversityRepository universityRepository;
     private final EntityManager em;
 
     @Transactional
-    public void importFromCsv(MultipartFile file, University file_univ) {
+    public void importFromCsv(MultipartFile file, String universityName) {
         log.info("importFromCsv");
+
+
+        University university = universityRepository.findByName(universityName).orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
 
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String[] cols;
@@ -60,7 +67,7 @@ public class CsvShopImporter {
                 String shopLink = cols[7].trim();
 
                 ShopCategory category = parseShopCategory(categoryStr);
-                University university = file_univ;
+                
 
                 Address address = parseAddress(fullAddress);
                 Location location = new Location(lat, lng);

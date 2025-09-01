@@ -1,7 +1,7 @@
 package com.terbuck.terbuck_be.domain.infrastructure.slack.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class SlackService {
         textSection.put("type", "section");
         textSection.put("text", Map.of(
                 "type", "mrkdwn",
-                "text", "*이름:* " + name + "\n*학번:* " + studentNumber + "\n*계정 소유자 이름:* " + socialName + "\n*대학교명:* " + university
+                "text", "*이름:* " + name + "\n*학번:* " + studentNumber + "\n*계정 소유자 이름:* " + socialName + "\n*대학교명:* " + university.getName()
         ));
         blocks.add(textSection);
 

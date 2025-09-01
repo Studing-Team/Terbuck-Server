@@ -2,13 +2,12 @@ package com.terbuck.terbuck_be.domain.member.service;
 
 import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.SocialType;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.auth.dto.UserInfo;
-import com.terbuck.terbuck_be.domain.auth.service.AppleOAuthService;
 import com.terbuck.terbuck_be.domain.auth.service.KakaoOAuthService;
-import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
@@ -24,6 +23,7 @@ public class MemberService {
 
     private final JpaMemberRepository repository;
     private final KakaoOAuthService kakaoOAuthService;
+    private final UniversityRepository universityRepository;
 
     @Transactional
     public Member findMemberBy(UserInfo userInfo) {
@@ -52,7 +52,9 @@ public class MemberService {
     @Transactional
     public void signIn(Long userId, SignInRequest signinRequest) {
         Member member = repository.findBy(userId);
-        member.additionalInfo(signinRequest);
+        University university = universityRepository.findByName(signinRequest.getUniversity())
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
+        member.additionalInfo(university);
     }
 
     @Transactional
@@ -72,8 +74,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateUniv(Long userId, University university) {
+    public void updateUniv(Long userId, String universityName) {
         Member member = repository.findBy(userId);
+        University university = universityRepository.findByName(universityName)
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         member.updateUniversity(university);
     }
 

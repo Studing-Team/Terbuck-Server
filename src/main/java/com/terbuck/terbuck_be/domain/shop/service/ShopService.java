@@ -1,6 +1,9 @@
 package com.terbuck.terbuck_be.domain.shop.service;
 
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
@@ -25,8 +28,12 @@ import java.util.stream.Collectors;
 public class ShopService {
 
     private final JpaShopRepository repository;
+    private final UniversityRepository universityRepository;
 
-    public ShopListResponse<HomeShopDto> getHomeShop(University university, List<ShopCategory> categoryList, Location location) {
+    public ShopListResponse<HomeShopDto> getHomeShop(String universityName, List<ShopCategory> categoryList, Location location) {
+        University university = universityRepository.findByName(universityName).orElseThrow(
+                () -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND)
+        );
         ShopListResponse<HomeShopDto> homeShopListResponse = new ShopListResponse<>();
 
         // shop과 Benefit 패치 조인 조회
@@ -46,7 +53,8 @@ public class ShopService {
         return homeShopListResponse;
     }
 
-    public ShopListResponse<MapShopDto> getMapShop(University university, List<ShopCategory> categoryList, Location location) {
+    public ShopListResponse<MapShopDto> getMapShop(String universityName, List<ShopCategory> categoryList, Location location) {
+        University university = universityRepository.findByName(universityName).orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         ShopListResponse<MapShopDto> shopListResponse = new ShopListResponse<>();
 
         List<Shop> shopsByUniv = repository.findAllByUnivAndCategoryAndLocation(university, categoryList, location);

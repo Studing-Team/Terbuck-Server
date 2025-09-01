@@ -1,6 +1,6 @@
 package com.terbuck.terbuck_be.domain.shop.repository;
 
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.shop.entity.Location;
 import com.terbuck.terbuck_be.domain.shop.entity.Shop;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;

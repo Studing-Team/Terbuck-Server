@@ -1,7 +1,7 @@
 package com.terbuck.terbuck_be.domain.shop.entity;
 
 import com.terbuck.terbuck_be.common.entity.BaseTimeEntity;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +22,8 @@ public class Shop extends BaseTimeEntity {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "university_id")
     private University university;
 
     @Enumerated(EnumType.STRING)

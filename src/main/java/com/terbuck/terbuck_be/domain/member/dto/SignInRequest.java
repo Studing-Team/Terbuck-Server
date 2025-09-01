@@ -1,6 +1,5 @@
 package com.terbuck.terbuck_be.domain.member.dto;
 
-import com.terbuck.terbuck_be.common.enums.University;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -8,7 +7,7 @@ import lombok.Data;
 public class SignInRequest {
 
     @NotNull(message = "university 값은 필수입니다.")
-    private University university;
+    private String university;
 
 //   Member.additionalInfo()
 //    this.policy = new Policy(true, true, true);

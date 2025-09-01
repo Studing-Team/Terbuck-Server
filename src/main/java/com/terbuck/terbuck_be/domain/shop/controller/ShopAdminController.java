@@ -1,9 +1,13 @@
 package com.terbuck.terbuck_be.domain.shop.controller;
 
-import com.terbuck.terbuck_be.common.enums.University;
+
+import com.terbuck.terbuck_be.common.exception.BusinessException;
+import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.image.dto.UpdateShopRequest;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.shop.service.CsvShopImporter;
+import com.terbuck.terbuck_be.domain.university.entity.University;
+import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,9 +25,10 @@ public class ShopAdminController {
 
     private final CsvShopImporter csvShopImporter;
     private final S3ImageService s3ImageService;
+    private final UniversityRepository universityRepository;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file, @RequestParam("university") University university) {
+    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file, @RequestParam("university") String university) {
         log.info("upload");
         try {
             csvShopImporter.importFromCsv(file, university);
@@ -37,7 +42,10 @@ public class ShopAdminController {
     @PostMapping("/image")
     public ResponseEntity<?> updateShopImageList(@RequestBody UpdateShopRequest updateShopRequest) {
         try {
-            s3ImageService.updateAllShopImagesByUniversity(updateShopRequest.getUniversity());
+            University university = universityRepository.findByName(updateShopRequest.getUniversity())
+                    .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
+
+            s3ImageService.updateAllShopImagesByUniversity(university.getId());
             return ResponseEntity.ok(null);
         } catch (Exception e) {
             throw new RuntimeException("오류 발생 : " + e.getMessage());

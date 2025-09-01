@@ -3,7 +3,7 @@ package com.terbuck.terbuck_be.domain.member.entity;
 import com.terbuck.terbuck_be.common.entity.BaseTimeEntity;
 import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.SocialType;
-import com.terbuck.terbuck_be.common.enums.University;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,7 +30,8 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "university_id")
     private University university;
 
     @Embedded
@@ -61,8 +62,8 @@ public class Member extends BaseTimeEntity {
         this.studentID = studentID;
     }
 
-    public void additionalInfo(SignInRequest request) {
-        this.university = request.getUniversity();
+    public void additionalInfo(University university) {
+        this.university = university;
         this.policy = new Policy(true, true, true);
         this.isSignedUp = true;
     }
