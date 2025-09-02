@@ -26,10 +26,7 @@ public class InfoController {
 
     @GetMapping("/universities")
     public ResponseEntity<SuccessStatusResponse<List<String>>> getUniversities() {
-
-        List<String> univList = universityService.getAllUniversities().stream().map(UniversityResponse::getName).toList();
-
-        return ResponseEntity.status(HttpStatus.OK).body(SuccessStatusResponse.of(SuccessMessage.INFO_UNIVERSITIES_GET_SUCCESS, univList));
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessStatusResponse.of(SuccessMessage.INFO_UNIVERSITIES_GET_SUCCESS, List.of("성신여자대학교", "광운대학교", "서울과학기술대학교", "삼육대학교")));
     }
 
     @GetMapping("/shop_categories")
