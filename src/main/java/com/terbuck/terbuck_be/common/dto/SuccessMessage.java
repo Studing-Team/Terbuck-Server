@@ -38,6 +38,15 @@ public enum SuccessMessage {
 
     OPEN_REQUEST_SUCCESS(HttpStatus.OK.value(),"대학교 제휴 정보 공개 요청에 성공했습니다."),
 
+    UNIVERSITY_CREATE_SUCCESS(HttpStatus.CREATED.value(), "대학교 생성에 성공했습니다."),
+    UNIVERSITY_GET_SUCCESS(HttpStatus.OK.value(), "대학교 단건 조회에 성공했습니다."),
+    UNIVERSITIES_GET_SUCCESS(HttpStatus.OK.value(), "대학교 전체 목록 조회에 성공했습니다."),
+    UNIVERSITY_UPDATE_SUCCESS(HttpStatus.OK.value(), "대학교 정보 수정에 성공했습니다."),
+    UNIVERSITY_DELETE_SUCCESS(HttpStatus.OK.value(), "대학교 삭제에 성공했습니다."),
+    UNIVERSITIES_BY_REGION_GET_SUCCESS(HttpStatus.OK.value(), "지역별 대학교 목록 조회에 성공했습니다."),
+    UNIVERSITY_REGISTRATION_CHECK_SUCCESS(HttpStatus.OK.value(), "대학교 등록 여부 조회에 성공했습니다."),
+    OPEN_REQUEST_CHECK_SUCCESS(HttpStatus.OK.value(), "대학교 제휴 정보 공개 요청 여부 조회에 성공했습니다."),
+
     BANNER_REQUEST_SUCCESS(HttpStatus.OK.value(), "광고 배너 제휴 조회 요청에 성공했습니다.") ;
 
     private final int status;

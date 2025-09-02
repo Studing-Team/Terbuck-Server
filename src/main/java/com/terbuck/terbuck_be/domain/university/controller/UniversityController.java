@@ -3,13 +3,12 @@ package com.terbuck.terbuck_be.domain.university.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.university.dto.*;
-import com.terbuck.terbuck_be.domain.university.entity.OpenRequest;
 import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,39 +20,45 @@ public class UniversityController {
     private final UniversityService universityService;
 
     @PostMapping
-    public ResponseEntity<UniversityResponse> createUniversity(@RequestBody UniversityRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(universityService.createUniversity(request));
+    public ResponseEntity<SuccessStatusResponse<UniversityResponse>> createUniversity(@RequestBody UniversityRequest request) {
+        UniversityResponse universityResponse = universityService.createUniversity(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(SuccessStatusResponse.of(SuccessMessage.UNIVERSITY_CREATE_SUCCESS, universityResponse));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UniversityResponse> getUniversity(@PathVariable Long id) {
-        return ResponseEntity.ok(universityService.getUniversity(id));
+    public ResponseEntity<SuccessStatusResponse<UniversityResponse>> getUniversity(@PathVariable Long id) {
+        UniversityResponse universityResponse = universityService.getUniversity(id);
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.UNIVERSITY_GET_SUCCESS, universityResponse));
     }
 
     @GetMapping
-    public ResponseEntity<List<UniversityResponse>> getAllUniversities() {
-        return ResponseEntity.ok(universityService.getAllUniversities());
+    public ResponseEntity<SuccessStatusResponse<List<UniversityResponse>>> getAllUniversities() {
+        List<UniversityResponse> universityResponses = universityService.getAllUniversities();
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.UNIVERSITIES_GET_SUCCESS, universityResponses));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UniversityResponse> updateUniversity(@PathVariable Long id, @RequestBody UniversityRequest request) {
-        return ResponseEntity.ok(universityService.updateUniversity(id, request));
+    public ResponseEntity<SuccessStatusResponse<UniversityResponse>> updateUniversity(@PathVariable Long id, @RequestBody UniversityRequest request) {
+        UniversityResponse universityResponse = universityService.updateUniversity(id, request);
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.UNIVERSITY_UPDATE_SUCCESS, universityResponse));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
+    public ResponseEntity<SuccessStatusResponse<Void>> deleteUniversity(@PathVariable Long id) {
         universityService.deleteUniversity(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.UNIVERSITY_DELETE_SUCCESS));
     }
 
     @GetMapping("/by-region")
-    public ResponseEntity<List<RegionUniversityResponse>> getAllUniversitiesGroupedByRegion() {
-        return ResponseEntity.ok(universityService.getAllUniversitiesGroupedByRegion());
+    public ResponseEntity<SuccessStatusResponse<List<RegionUniversityResponse>>> getAllUniversitiesGroupedByRegion() {
+        List<RegionUniversityResponse> regionUniversityResponses = universityService.getAllUniversitiesGroupedByRegion();
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.UNIVERSITIES_BY_REGION_GET_SUCCESS, regionUniversityResponses));
     }
 
     @GetMapping("/is-registered")
-    public ResponseEntity<Boolean> isUniversityRegistered(@RequestParam String universityName) {
-        return ResponseEntity.ok(universityService.isUniversityRegistered(universityName));
+    public ResponseEntity<SuccessStatusResponse<Boolean>> isUniversityRegistered(@RequestParam String universityName) {
+        boolean isRegistered = universityService.isUniversityRegistered(universityName);
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.UNIVERSITY_REGISTRATION_CHECK_SUCCESS, isRegistered));
     }
 
     @PostMapping("/open")
@@ -67,8 +72,9 @@ public class UniversityController {
     }
 
     @GetMapping("/open")
-    public ResponseEntity<Boolean> getOpenUniversityRequest(
+    public ResponseEntity<SuccessStatusResponse<Boolean>> getOpenUniversityRequest(
             @AuthenticationPrincipal Long memberId) {
-        return ResponseEntity.ok(universityService.checkAlreadyRequestOpen(memberId));
+        boolean hasRequested = universityService.checkAlreadyRequestOpen(memberId);
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.OPEN_REQUEST_CHECK_SUCCESS, hasRequested));
     }
 }
