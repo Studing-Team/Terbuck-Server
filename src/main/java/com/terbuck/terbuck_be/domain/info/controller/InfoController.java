@@ -3,6 +3,7 @@ package com.terbuck.terbuck_be.domain.info.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.university.dto.UniversityResponse;
+import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,9 @@ public class InfoController {
     private final UniversityService universityService;
 
     @GetMapping("/universities")
-    public ResponseEntity<SuccessStatusResponse<List<UniversityResponse>>> getUniversities() {
+    public ResponseEntity<SuccessStatusResponse<List<String>>> getUniversities() {
 
-        List<UniversityResponse> univList = universityService.getAllUniversities();
+        List<String> univList = universityService.getAllUniversities().stream().map(UniversityResponse::getName).toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(SuccessStatusResponse.of(SuccessMessage.INFO_UNIVERSITIES_GET_SUCCESS, univList));
     }
