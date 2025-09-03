@@ -22,26 +22,26 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final JpaMemberRepository repository;
+    private final JpaMemberRepository memberRepository;
     private final KakaoOAuthService kakaoOAuthService;
     private final UniversityRepository universityRepository;
     private final SlackService slackService;
 
     @Transactional
     public Member findMemberBy(UserInfo userInfo) {
-        return repository.findBy(userInfo);
+        return memberRepository.findBy(userInfo);
     }
 
     @Transactional
     public Member findMemberBy(Long id) {
-        return repository.findBy(id);
+        return memberRepository.findBy(id);
     }
 
     @Transactional
     public void deleteMember(Long id) {
-        Member member = repository.findBy(id);
+        Member member = memberRepository.findBy(id);
 
-        repository.delete(member);
+        memberRepository.delete(member);
         socialUnlink(member);
     }
 
@@ -53,12 +53,12 @@ public class MemberService {
 
     @Transactional
     public void signIn(Long userId, SignInRequest signinRequest) {
-        Member member = repository.findBy(userId);
+        Member member = memberRepository.findBy(userId);
         University university = universityRepository.findByName(signinRequest.getUniversity())
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         member.additionalInfo(university);
 
-        long memberCount = repository.count();
+        long memberCount = memberRepository.count();
         slackService.sendMessage("새로운 회원이 가입했습니다! \n현재 총 회원 수: " + memberCount + "명");
     }
 
@@ -73,14 +73,14 @@ public class MemberService {
                 .studentID(new StudentID(false, null, null))
                 .build();
 
-        Long memberId = repository.register(newMember);
+        Long memberId = memberRepository.register(newMember);
 
-        return repository.findBy(memberId);
+        return memberRepository.findBy(memberId);
     }
 
     @Transactional
     public void updateUniv(Long userId, String universityName) {
-        Member member = repository.findBy(userId);
+        Member member = memberRepository.findBy(userId);
         University university = universityRepository.findByName(universityName)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
         member.updateUniversity(university);
@@ -88,26 +88,27 @@ public class MemberService {
 
     @Transactional
     public StudentIDResponse getStudentID(Long userID) {
-        Member member = repository.findBy(userID);
+        Member member = memberRepository.findBy(userID);
 
         return StudentIDResponse.of(member);
     }
 
     @Transactional
-    public void updateStudentID(Long userId, String imageURL, String studentNumber) {
-        Member member = repository.findBy(userId);
+    public void updateStudentID(Long userId, String imageURL, String studentNumber, String name) {
+        Member member = memberRepository.findBy(userId);
         member.updateStudentID(imageURL, studentNumber);
+        slackService.sendStudentIdUpdateMessage(userId, name, studentNumber, member.getName(), imageURL, member.getUniversity());
     }
 
     @Transactional
     public void deleteStudentID(Long userId) {
-        Member member = repository.findBy(userId);
+        Member member = memberRepository.findBy(userId);
         member.updateStudentID(null, null);
     }
 
     @Transactional
     public void enableStudentID(Long userId) {
-        Member member = repository.findBy(userId);
+        Member member = memberRepository.findBy(userId);
         member.getStudentID().enable();
     }
 
@@ -118,6 +119,6 @@ public class MemberService {
 
     @Transactional
     public boolean isRegister(UserInfo userInfo) {
-        return repository.findBy(userInfo) != null;
+        return memberRepository.findBy(userInfo) != null;
     }
 }

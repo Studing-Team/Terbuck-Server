@@ -63,7 +63,7 @@ public class SlackService {
         textSection.put("type", "section");
         textSection.put("text", Map.of(
                 "type", "mrkdwn",
-                "text", "*이름:* " + name + "\n*학번:* " + studentNumber + "\n*계정 소유자 이름:* " + socialName + "\n*대학교명:* " + university.getName()
+                "text", "*이름:* " + name + "\n*학번:* " + studentNumber + "\n*계정 소유자 이름:* " + socialName + "\n*대학교명:* " + (university != null ? university.getName() : "미지정")
         ));
         blocks.add(textSection);
 

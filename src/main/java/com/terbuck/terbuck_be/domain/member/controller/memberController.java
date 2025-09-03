@@ -82,10 +82,7 @@ public class memberController {
             @AuthenticationPrincipal Long userId
     ) {
         String imageURL = imageService.uploadStudentIDImage(image);
-
-        memberService.updateStudentID(userId, imageURL, studentNumber);
-        Member member = memberService.findMemberBy(userId);
-        slackService.sendStudentIdUpdateMessage(userId, name, studentNumber, member.getName(), imageURL, member.getUniversity());
+        memberService.updateStudentID(userId, imageURL, studentNumber, name);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
