@@ -26,8 +26,11 @@ public class SlackService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    @Value("${slack.webhook.url}")
-    private String slackWebhookUrl;
+    @Value("${slack.webhook.student-id.url}")
+    private String studentIdWebhookUrl;
+
+    @Value("${slack.webhook.signin.url}")
+    private String signInWebhookUrl;
 
     public void sendStudentIdUpdateMessage(Long userId, String name, String studentNumber, String socialName, String imageUrl, University university) {
         try {
@@ -41,7 +44,7 @@ public class SlackService {
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(slackWebhookUrl, request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(studentIdWebhookUrl, request, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.info("Slack message sent successfully.");
@@ -110,7 +113,7 @@ public class SlackService {
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(slackWebhookUrl, request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(signInWebhookUrl, request, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.info("Slack message sent successfully.");
@@ -125,4 +128,3 @@ public class SlackService {
     }
 
 }
-
