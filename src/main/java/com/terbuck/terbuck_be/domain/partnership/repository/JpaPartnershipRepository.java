@@ -28,10 +28,13 @@ public class JpaPartnershipRepository implements PartnershipRepository {
     }
 
     public List<Partnership> findAllByUniv(University university) {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(newLimit);
+
         return em.createQuery(
-                        "select p from Partnership p where p.university =: univ"
+                        "select p from Partnership p where p.university =: univ and p.createdDate <: sevenDaysAgo"
                         , Partnership.class
                 ).setParameter("univ", university)
+                .setParameter("sevenDaysAgo", sevenDaysAgo)
                 .getResultList();
     }
 
