@@ -48,7 +48,10 @@ public enum SuccessMessage {
     UNIVERSITY_REGISTRATION_CHECK_SUCCESS(HttpStatus.OK.value(), "대학교 등록 여부 조회에 성공했습니다."),
     OPEN_REQUEST_CHECK_SUCCESS(HttpStatus.OK.value(), "대학교 제휴 정보 공개 요청 여부 조회에 성공했습니다."),
 
-    BANNER_REQUEST_SUCCESS(HttpStatus.OK.value(), "광고 배너 제휴 조회 요청에 성공했습니다.") ;
+    BANNER_REQUEST_SUCCESS(HttpStatus.OK.value(), "광고 배너 제휴 조회 요청에 성공했습니다.") ,
+
+    SUCCESS_GET_APP_VERSION(HttpStatus.OK.value(), "앱 버전 조회가 완료되었습니다."),
+    SUCCESS_CHECK_APP_UPDATE(HttpStatus.OK.value(), "앱 업데이트 확인이 완료되었습니다.");
 
     private final int status;
     private final String message;
