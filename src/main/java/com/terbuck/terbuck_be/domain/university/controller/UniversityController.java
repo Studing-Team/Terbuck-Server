@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import com.terbuck.terbuck_be.domain.university.dto.CollegeResponse;
+import com.terbuck.terbuck_be.domain.university.service.CollegeService;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/university")
 public class UniversityController {
 
     private final UniversityService universityService;
+    private final CollegeService collegeService;
 
     @PostMapping
     public ResponseEntity<SuccessStatusResponse<UniversityResponse>> createUniversity(@RequestBody UniversityRequest request) {
@@ -76,5 +80,10 @@ public class UniversityController {
             @AuthenticationPrincipal Long memberId) {
         boolean hasRequested = universityService.checkAlreadyRequestOpen(memberId);
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.OPEN_REQUEST_CHECK_SUCCESS, hasRequested));
+    }
+
+    @GetMapping("/colleges")
+    public SuccessStatusResponse<List<CollegeResponse>> getCollegesByUniversityName(@RequestParam("name") String name) {
+        return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(name));
     }
 }
