@@ -6,6 +6,7 @@ import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.university.dto.*;
 import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import com.terbuck.terbuck_be.domain.university.dto.CollegeResponse;
 import com.terbuck.terbuck_be.domain.university.service.CollegeService;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/university")
@@ -87,8 +89,9 @@ public class UniversityController {
     }
 
     @GetMapping("/colleges")
-    public SuccessStatusResponse<List<CollegeResponse>> getCollegesByUniversityName(@RequestParam("name") String name) {
-        return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(name));
+    public SuccessStatusResponse<List<CollegeResponse>> getCollegesByUniversityName(@RequestParam String university) {
+        log.info("name raw='{}'", university);
+        return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(university));
     }
 
     @PostMapping("/colleges")
