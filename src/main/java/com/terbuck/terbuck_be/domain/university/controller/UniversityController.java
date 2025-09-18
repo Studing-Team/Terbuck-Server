@@ -1,5 +1,6 @@
 package com.terbuck.terbuck_be.domain.university.controller;
 
+import com.opencsv.exceptions.CsvException;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.university.dto.*;
@@ -7,9 +8,11 @@ import com.terbuck.terbuck_be.domain.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.terbuck.terbuck_be.domain.university.dto.CollegeResponse;
@@ -85,5 +88,12 @@ public class UniversityController {
     @GetMapping("/colleges")
     public SuccessStatusResponse<List<CollegeResponse>> getCollegesByUniversityName(@RequestParam("name") String name) {
         return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(name));
+    }
+
+    @PostMapping("/colleges/csv")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SuccessStatusResponse<Void>> createCollegesFromCsv() throws IOException, CsvException {
+        collegeService.createCollegesFromCsv("univ_college.csv");
+        return ResponseEntity.status(HttpStatus.CREATED).body(SuccessStatusResponse.of(SuccessMessage.SUCCESS_CREATE_COLLEGES));
     }
 }

@@ -51,6 +51,7 @@ public enum SuccessMessage {
     BANNER_REQUEST_SUCCESS(HttpStatus.OK.value(), "광고 배너 제휴 조회 요청에 성공했습니다.") ,
 
     SUCCESS_GET_COLLEGES(HttpStatus.OK.value(), "단과대학 목록 조회가 완료되었습니다."),
+    SUCCESS_CREATE_COLLEGES(HttpStatus.CREATED.value(), "CSV 파일로부터 단과대학 생성에 성공했습니다."),
 
     SUCCESS_GET_APP_VERSION(HttpStatus.OK.value(), "앱 버전 조회가 완료되었습니다."),
     SUCCESS_CHECK_APP_UPDATE(HttpStatus.OK.value(), "앱 업데이트 확인이 완료되었습니다.");
