@@ -4,10 +4,7 @@ import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
-import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
-import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
-import com.terbuck.terbuck_be.domain.member.dto.StudentIDPendingResponse;
-import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
+import com.terbuck.terbuck_be.domain.member.dto.*;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -58,6 +55,18 @@ public class memberController {
             @AuthenticationPrincipal Long userId
     ) {
         memberService.signIn(userId, signInRequest);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.SIGN_IN_SUCCESS));
+    }
+
+    @PostMapping("/signin/v2")
+    public ResponseEntity<SuccessStatusResponse<?>> signInV2(
+            @RequestBody @Valid SignInRequestV2 signInRequest,
+            @AuthenticationPrincipal Long userId
+    ) {
+        memberService.signInV2(userId, signInRequest);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

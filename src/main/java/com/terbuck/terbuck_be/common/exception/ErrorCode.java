@@ -24,6 +24,7 @@ public enum ErrorCode {
     PARTNERSHIP_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 파트너십이 존재하지 않습니다."),
 
     UNIVERSITY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 대학교가 존재하지 않습니다."),
+    COLLEGE_NOT_FOUND(HttpStatus.NOT_EXTENDED.value(), "해당 단과대학이 존재하지 않습니다."),
 
     NOT_FOUND_APP_VERSION(HttpStatus.NOT_FOUND.value(), "해당 OS의 앱 버전을 찾을 수 없습니다.")
     ;
