@@ -90,7 +90,7 @@ public class UniversityController {
         return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(name));
     }
 
-    @PostMapping("/colleges/csv")
+    @PostMapping("/colleges")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SuccessStatusResponse<Void>> createCollegesFromCsv() throws IOException, CsvException {
         collegeService.createCollegesFromCsv("univ_college.csv");
