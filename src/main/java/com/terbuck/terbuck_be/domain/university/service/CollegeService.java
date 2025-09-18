@@ -1,5 +1,7 @@
 package com.terbuck.terbuck_be.domain.university.service;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
 import com.terbuck.terbuck_be.common.exception.ErrorCode;
 import com.terbuck.terbuck_be.domain.university.dto.CollegeResponse;
@@ -10,14 +12,13 @@ import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
-import java.io.FileReader;
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +38,8 @@ public class CollegeService {
     }
 
     @Transactional
-    public void createCollegesFromCsv(String filePath) throws IOException, CsvException {
-        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+    public void createCollegesFromCsv(MultipartFile file) throws IOException, CsvException {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             List<String[]> allRows = reader.readAll();
             for (String[] row : allRows) {
                 String universityName = row[0];

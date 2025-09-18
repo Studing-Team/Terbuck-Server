@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.terbuck.terbuck_be.domain.university.dto.CollegeResponse;
 import com.terbuck.terbuck_be.domain.university.service.CollegeService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -92,8 +93,8 @@ public class UniversityController {
 
     @PostMapping("/colleges")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SuccessStatusResponse<Void>> createCollegesFromCsv() throws IOException, CsvException {
-        collegeService.createCollegesFromCsv("univ_college.csv");
+    public ResponseEntity<SuccessStatusResponse<Void>> createCollegesFromCsv(@RequestParam("file") MultipartFile file) throws IOException, CsvException {
+        collegeService.createCollegesFromCsv(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(SuccessStatusResponse.of(SuccessMessage.SUCCESS_CREATE_COLLEGES));
     }
 }
