@@ -27,6 +27,7 @@ public enum SuccessMessage {
     STUDENTID_UPDATE_SUCCESS(HttpStatus.OK.value(), "학생증 등록 요청에 성공했습니다."),
     STUDENTID_GET_SUCCESS(HttpStatus.OK.value(), "학생증 조회에 성공했습니다."),
     STUDENTID_DELETE_SUCCESS(HttpStatus.NO_CONTENT.value(), "학생증 삭제에 성공했습니다."),
+    STUDENTID_PENDING_STATUS_GET_SUCCESS(HttpStatus.OK.value(), "학생증 심사 상태 조회 성공"),
 
     AUTH_REISSUE_SUCCESS(HttpStatus.OK.value(), "리프레시 토큰을 통한 토큰 재발급에 성공했습니다."),
 

@@ -3,6 +3,7 @@ package com.terbuck.terbuck_be.domain.member.service;
 import com.terbuck.terbuck_be.common.enums.Role;
 import com.terbuck.terbuck_be.common.enums.SocialType;
 import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
+import com.terbuck.terbuck_be.domain.member.dto.StudentIDPendingResponse;
 import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.common.exception.BusinessException;
@@ -120,5 +121,18 @@ public class MemberService {
     @Transactional
     public boolean isRegister(UserInfo userInfo) {
         return memberRepository.findBy(userInfo) != null;
+    }
+
+    @Transactional(readOnly = true)
+    public StudentIDPendingResponse isStudentIdPending(Long userId) {
+        Member member = memberRepository.findBy(userId);
+        StudentID studentID = member.getStudentID();
+
+        if (studentID == null || studentID.getIdCardImage() == null || studentID.getIdCardImage().isEmpty()) {
+            return StudentIDPendingResponse.of(false);
+        }
+
+        boolean isPending = !studentID.getIsRegistered();
+        return StudentIDPendingResponse.of(isPending);
     }
 }

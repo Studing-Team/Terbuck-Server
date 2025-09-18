@@ -6,6 +6,7 @@ import com.terbuck.terbuck_be.domain.image.service.S3ImageService;
 import com.terbuck.terbuck_be.domain.infrastructure.slack.service.SlackService;
 import com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequest;
 import com.terbuck.terbuck_be.domain.member.dto.SignInRequest;
+import com.terbuck.terbuck_be.domain.member.dto.StudentIDPendingResponse;
 import com.terbuck.terbuck_be.domain.member.dto.StudentIDResponse;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.service.MemberService;
@@ -73,7 +74,6 @@ public class memberController {
                 .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_GET_SUCCESS, studentIDResponse));
     }
 
-
     @PutMapping("/studentID")
     public ResponseEntity<SuccessStatusResponse<?>> updateStudentID(
             @RequestParam MultipartFile image,
@@ -102,6 +102,16 @@ public class memberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_DELETE_SUCCESS));
+    }
+
+    @GetMapping("/studentID/pending")
+    public ResponseEntity<SuccessStatusResponse<StudentIDPendingResponse>> getStudentIdPendingStatus(
+            @AuthenticationPrincipal Long userId) {
+        StudentIDPendingResponse response = memberService.isStudentIdPending(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.STUDENTID_PENDING_STATUS_GET_SUCCESS, response));
     }
 
 }
