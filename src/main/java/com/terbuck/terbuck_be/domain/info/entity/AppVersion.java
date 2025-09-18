@@ -28,9 +28,6 @@ public class AppVersion extends BaseTimeEntity {
     @Column(nullable = false)
     private String version;
 
-    @Column(nullable = false)
-    private boolean isForceUpdate;
-
     public enum OS {
         IOS, ANDROID
     }

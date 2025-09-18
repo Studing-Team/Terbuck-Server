@@ -5,6 +5,7 @@ import lombok.Builder;
 @Builder
 public record UpdateCheckResponse(
         boolean isUpdateNeeded,
-        boolean isForceUpdate
+        String currentVersion,
+        String leastRequiredVersion
 ) {
 }

@@ -31,7 +31,8 @@ public class AppVersionService {
 
         return UpdateCheckResponse.builder()
                 .isUpdateNeeded(isUpdateNeeded)
-                .isForceUpdate(isUpdateNeeded && appVersion.isForceUpdate())
+                .currentVersion(currentVersion)
+                .leastRequiredVersion(appVersion.getVersion())
                 .build();
     }
 
