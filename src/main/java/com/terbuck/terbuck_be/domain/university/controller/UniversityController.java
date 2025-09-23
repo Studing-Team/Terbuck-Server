@@ -89,9 +89,9 @@ public class UniversityController {
     }
 
     @GetMapping("/colleges")
-    public SuccessStatusResponse<List<CollegeResponse>> getCollegesByUniversityName(@RequestParam String university) {
-        log.info("name raw='{}'", university);
-        return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(university));
+    public SuccessStatusResponse<List<CollegeResponse>> getCollegesByUniversityName(@RequestParam String universityName) {
+        log.info("name raw='{}'", universityName);
+        return SuccessStatusResponse.of(SuccessMessage.SUCCESS_GET_COLLEGES, collegeService.getCollegesByUniversityName(universityName));
     }
 
     @PostMapping("/colleges")
