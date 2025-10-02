@@ -49,6 +49,19 @@ public class memberController {
                 .body(SuccessStatusResponse.of(SuccessMessage.UNIV_UPDATE_SUCCESS));
     }
 
+    @PatchMapping("/univ/v2")
+    public ResponseEntity<SuccessStatusResponse<?>> updateUnivV2(
+            @RequestBody @Valid PatchUnivRequestV2 patchUnivRequest,
+            @AuthenticationPrincipal Long userId
+    ) {
+        memberService.updateUnivV2(userId, patchUnivRequest);
+        memberService.deleteStudentID(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.UNIV_UPDATE_SUCCESS));
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<SuccessStatusResponse<?>> signIn(
             @RequestBody @Valid SignInRequest signInRequest,

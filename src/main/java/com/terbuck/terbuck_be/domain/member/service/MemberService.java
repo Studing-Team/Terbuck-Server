@@ -105,6 +105,16 @@ public class MemberService {
     }
 
     @Transactional
+    public void updateUnivV2(Long userId, com.terbuck.terbuck_be.domain.member.dto.PatchUnivRequestV2 patchUnivRequest) {
+        Member member = memberRepository.findBy(userId);
+        University university = universityRepository.findByName(patchUnivRequest.getUniversity())
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNIVERSITY_NOT_FOUND));
+        College college = collegeRepository.findById(patchUnivRequest.getCollegeId())
+                .orElseThrow(() -> new BusinessException((ErrorCode.COLLEGE_NOT_FOUND)));
+        member.updateUniversityV2(university, college);
+    }
+
+    @Transactional
     public StudentIDResponse getStudentID(Long userID) {
         Member member = memberRepository.findBy(userID);
 

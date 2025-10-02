@@ -84,6 +84,11 @@ public class Member extends BaseTimeEntity {
         this.university = university;
     }
 
+    public void updateUniversityV2(University university, College college) {
+        this.university = university;
+        this.college = college;
+    }
+
     public void updateStudentID(String studentIDImageURL, String studentNumber) {
         this.studentID = new StudentID(false, studentNumber, studentIDImageURL);
     }
