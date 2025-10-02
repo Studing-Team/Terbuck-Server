@@ -70,4 +70,12 @@ public class ShopService {
         Shop shop = repository.findById(shopId);
         return ShopResponse.of(shop);
     }
+
+    public Shop findRandomShop(University university, ShopCategory category) {
+        List<Shop> shops = repository.findAllByUnivAndCategory(university, category);
+        if (shops.isEmpty()) {
+            return null;
+        }
+        return shops.get((int) (Math.random() * shops.size()));
+    }
 }

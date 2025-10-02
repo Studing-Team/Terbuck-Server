@@ -70,4 +70,11 @@ public class JpaMemberRepository implements MemberRepository {
 
         return findMember.getId();
     }
+
+    @Override
+    public List<Member> findAllWithFcmToken() {
+        return em.createQuery("select m from Member m where m.fcmDeviceToken is not null and m.fcmDeviceToken != ''", Member.class)
+                .getResultList();
+    }
+
 }

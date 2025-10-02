@@ -22,6 +22,8 @@ public interface MemberRepository{
 
     List<Member> findAll();
 
+    List<Member> findAllWithFcmToken();
+
     long count();
 
 }
