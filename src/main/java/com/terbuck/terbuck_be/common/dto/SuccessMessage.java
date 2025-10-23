@@ -50,6 +50,11 @@ public enum SuccessMessage {
 
     BANNER_REQUEST_SUCCESS(HttpStatus.OK.value(), "광고 배너 제휴 조회 요청에 성공했습니다.") ,
 
+    BANNER_CREATE_SUCCESS(HttpStatus.CREATED.value(), "배너 생성에 성공했습니다."),
+    BANNER_GET_SUCCESS(HttpStatus.OK.value(), "배너 조회에 성공했습니다."),
+    BANNER_UPDATE_SUCCESS(HttpStatus.OK.value(), "배너 수정에 성공했습니다."),
+    BANNER_DELETE_SUCCESS(HttpStatus.OK.value(), "배너 삭제에 성공했습니다."),
+
     SUCCESS_GET_COLLEGES(HttpStatus.OK.value(), "단과대학 목록 조회가 완료되었습니다."),
     SUCCESS_CREATE_COLLEGES(HttpStatus.CREATED.value(), "CSV 파일로부터 단과대학 생성에 성공했습니다."),
 
