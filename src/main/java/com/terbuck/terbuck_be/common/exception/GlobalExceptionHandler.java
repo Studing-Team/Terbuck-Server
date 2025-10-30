@@ -76,4 +76,12 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorStatusResponse.of(HttpStatus.BAD_REQUEST.value(), message));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorStatusResponse> handleUnHandledException(Exception e) {
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorStatusResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+    }
 }
