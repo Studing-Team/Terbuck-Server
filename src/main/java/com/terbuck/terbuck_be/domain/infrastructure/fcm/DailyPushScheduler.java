@@ -9,6 +9,8 @@ import com.terbuck.terbuck_be.domain.shop.service.ShopService;
 import com.terbuck.terbuck_be.domain.university.entity.University;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class DailyPushScheduler {
+
+    private static final Logger logger = LoggerFactory.getLogger(DailyPushScheduler.class);
 
     private final FcmService fcmService;
     private final MemberRepository memberRepository;
@@ -43,30 +47,42 @@ public class DailyPushScheduler {
 
     @Scheduled(cron = "0 50 11 * * *", zone = "Asia/Seoul")
     public void sendDailyLunchPush() {
+        logger.info("Daily Lunch Push scheduled task started.");
         sendPushNotifications(LUNCH_MESSAGES);
+        logger.info("Daily Lunch Push scheduled task finished.");
     }
 
     @Scheduled(cron = "0 30 17 * * *", zone = "Asia/Seoul")
     public void sendDailyDinnerPush() {
+        logger.info("Daily Dinner Push scheduled task started.");
         sendPushNotifications(DINNER_MESSAGES);
+        logger.info("Daily Dinner Push scheduled task finished.");
     }
 
     private void sendPushNotifications(List<PushMessageTemplate> messages) {
+        logger.info("Fetching members with FCM tokens...");
         List<Member> members = memberRepository.findAllWithFcmToken();
+        logger.info("Found {} members with FCM tokens.", members.size());
+
         Map<University, List<Member>> membersByUniversity = members.stream()
                 .filter(member -> member.getUniversity() != null)
                 .collect(Collectors.groupingBy(Member::getUniversity));
+        logger.info("Grouped members by {} universities.", membersByUniversity.size());
 
         Random random = new Random();
 
         for (Map.Entry<University, List<Member>> entry : membersByUniversity.entrySet()) {
             University university = entry.getKey();
             List<Member> universityMembers = entry.getValue();
+            logger.info("Processing university: {} with {} members.", university.getName(), universityMembers.size());
 
             PushMessageTemplate template = messages.get(random.nextInt(messages.size()));
+            logger.info("Selected push message template for category: {}.", template.getCategory());
+
             Shop randomShop = shopService.findRandomShop(university, template.getCategory());
 
             if (randomShop != null) {
+                logger.info("Found random shop: {} for university: {} and category: {}.", randomShop.getName(), university.getName(), template.getCategory());
                 String title = template.getTitle();
                 String body = template.getContent().replace("{매장명}", randomShop.getName());
 
@@ -75,8 +91,13 @@ public class DailyPushScheduler {
                         .collect(Collectors.toList());
 
                 if (!tokens.isEmpty()) {
+                    logger.info("Sending push notification to {} tokens for university: {}.\nTitle: {}, Body: {}", tokens.size(), university.getName(), title, body);
                     fcmService.sendPush(tokens, title, body);
+                } else {
+                    logger.warn("No FCM tokens found for university: {} to send push notification.", university.getName());
                 }
+            } else {
+                logger.warn("No random shop found for university: {} and category: {}. Skipping push notification for this university.", university.getName(), template.getCategory());
             }
         }
     }

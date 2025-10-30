@@ -9,6 +9,8 @@ import com.google.firebase.messaging.Notification;
 import com.terbuck.terbuck_be.domain.member.entity.Member;
 import com.terbuck.terbuck_be.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FcmService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FcmService.class);
 
     private final MemberRepository repository;
 
@@ -44,9 +48,9 @@ public class FcmService {
 
         try {
             String response = FirebaseMessaging.getInstance().send(message);
-            System.out.println("푸시 성공: " + response);
+            logger.info("푸시 성공: {}", response);
         } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+            logger.error("단일 푸시 전송 실패: {}", e.getMessage(), e);
         }
     }
 
@@ -63,9 +67,9 @@ public class FcmService {
 
         try {
             BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
-            System.out.println("멀티캐스트 푸시 성공: " + response);
+            logger.info("멀티캐스트 푸시 성공: {}", response);
         } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+            logger.error("멀티캐스트 푸시 전송 실패: {}", e.getMessage(), e);
         }
     }
 }
