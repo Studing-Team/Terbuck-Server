@@ -44,6 +44,7 @@ public class Member extends BaseTimeEntity {
 
     private String refreshToken;
 
+    @Column(name = "fcm_device_token")
     private String fcmDeviceToken;
 
     @Embedded
