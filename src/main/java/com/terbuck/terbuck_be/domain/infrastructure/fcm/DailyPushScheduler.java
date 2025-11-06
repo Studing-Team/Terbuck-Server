@@ -13,13 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class DailyPushScheduler {
 
@@ -45,6 +47,7 @@ public class DailyPushScheduler {
             new PushMessageTemplate(ShopCategory.주점, "선선한 저녁, 술 한잔 어때요?", "{매장명}에서만 만날 수 있는 특별한 혜택을 확인해보세요.")
     );
 
+    @Transactional(readOnly = true)
     @Scheduled(cron = "0 50 11 * * *", zone = "Asia/Seoul")
     public void sendDailyLunchPush() {
         logger.info("Daily Lunch Push scheduled task started.");
@@ -52,6 +55,7 @@ public class DailyPushScheduler {
         logger.info("Daily Lunch Push scheduled task finished.");
     }
 
+    @Transactional(readOnly = true)
     @Scheduled(cron = "0 30 17 * * *", zone = "Asia/Seoul")
     public void sendDailyDinnerPush() {
         logger.info("Daily Dinner Push scheduled task started.");
