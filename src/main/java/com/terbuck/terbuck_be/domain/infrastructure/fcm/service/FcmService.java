@@ -21,6 +21,7 @@ import java.util.List;
 public class FcmService {
 
     private static final Logger logger = LoggerFactory.getLogger(FcmService.class);
+    private static final int BATCH_SIZE = 100;
 
     private final MemberRepository repository;
 
@@ -55,21 +56,40 @@ public class FcmService {
     }
 
     public void sendPush(List<String> tokens, String title, String body) {
-        Notification notification = Notification.builder()
-                .setTitle(title)
-                .setBody(body)
-                .build();
-
-        MulticastMessage message = MulticastMessage.builder()
-                .addAllTokens(tokens)
-                .setNotification(notification)
-                .build();
-
-        try {
-            BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
-            logger.info("멀티캐스트 푸시 성공: {}", response);
-        } catch (FirebaseMessagingException e) {
-            logger.error("멀티캐스트 푸시 전송 실패: {}", e.getMessage(), e);
+        if (tokens == null || tokens.isEmpty()) {
+            logger.warn("토큰 리스트가 비어 있습니다. 푸시 전송을 중단합니다.");
+            return;
         }
+
+        int totalSent = 0;
+        int totalFailed = 0;
+
+        for (int i = 0; i < tokens.size(); i += BATCH_SIZE) {
+            int end = Math.min(i + BATCH_SIZE, tokens.size());
+            List<String> batchTokens = tokens.subList(i, end);
+
+            List<Message> messages = batchTokens.stream()
+                    .map(token -> Message.builder()
+                            .setToken(token)
+                            .setNotification(Notification.builder()
+                                    .setTitle(title)
+                                    .setBody(body)
+                                    .build())
+                            .build())
+                    .toList();
+
+            try {
+                BatchResponse response = FirebaseMessaging.getInstance().sendEach(messages, false);
+                totalSent += response.getSuccessCount();
+                totalFailed += response.getFailureCount();
+                logger.info("배치 전송 완료 ({}~{}): 성공 {}건 / 실패 {}건",
+                        i, end - 1, response.getSuccessCount(), response.getFailureCount());
+            } catch (FirebaseMessagingException e) {
+                logger.error("배치 푸시 전송 실패 ({}~{}): {}", i, end - 1, e.getMessage(), e);
+            }
+        }
+
+        logger.info("푸시 전송 최종 결과: 성공 {}건 / 실패 {}건 / 총 {}건",
+                totalSent, totalFailed, tokens.size());
     }
 }
