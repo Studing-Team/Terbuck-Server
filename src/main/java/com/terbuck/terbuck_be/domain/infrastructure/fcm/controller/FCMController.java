@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class FCMController {
 
     private final FcmService fcmService;
-    private DailyPushScheduler dailyPushScheduler;
+    private final DailyPushScheduler dailyPushScheduler;
 
     @PostMapping("/token")
     public ResponseEntity<SuccessStatusResponse<?>> register(@RequestBody DeviceTokenRequest deviceToken,
@@ -42,7 +42,7 @@ public class FCMController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/dinner")
+    @PostMapping("/dinner")
     public String sendDinnerPush(@AuthenticationPrincipal Long userID) {
         dailyPushScheduler.sendDailyDinnerPush();
         return "성공";
