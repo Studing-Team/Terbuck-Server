@@ -19,12 +19,15 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class S3ImageService {
+
+    private static final Pattern THUMBNAIL_FILE_PATTERN = Pattern.compile(".*/1\\.[^/]+$");
 
     private final S3Client s3Client;
     private final ShopRepository shopRepository;
@@ -109,7 +112,7 @@ public class S3ImageService {
             ShopImage image = new ShopImage(url);
             image.changeShop(shop);
 
-            if (obj.key().endsWith("1.png")) {
+            if (THUMBNAIL_FILE_PATTERN.matcher(obj.key()).matches()) {
                 shop.changeThumbnailImage(url); // shop 객체에 thumbnail 필드 설정
             }
         }
