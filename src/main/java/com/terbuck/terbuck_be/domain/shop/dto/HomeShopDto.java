@@ -12,13 +12,15 @@ public class HomeShopDto {
     private Long shopId;
     private ShopCategory category;
     private String name;
+    private Long viewCount;
     private String address;
     private List<BenefitDto> benefitList = new ArrayList<>();
 
-    public HomeShopDto(Long shopId, ShopCategory category, String name) {
+    public HomeShopDto(Long shopId, ShopCategory category, String name, Long viewCount) {
         this.shopId = shopId;
         this.category = category;
         this.name = name;
+        this.viewCount = viewCount;
     }
 
     public static HomeShopDto of(Shop shop) {
@@ -26,7 +28,8 @@ public class HomeShopDto {
         HomeShopDto homeShopDto = new HomeShopDto(
                 shop.getId(),
                 shop.getCategory(),
-                shop.getName()
+                shop.getName(),
+                shop.getViewCount()
         );
 
         String address = Address.StringOf(shop.getAddress());
