@@ -39,6 +39,9 @@ public class Shop extends BaseTimeEntity {
     @Embedded
     private Location location;
 
+    @Column(nullable = false)
+    private Long viewCount = 0L;
+
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benefit> benefitList = new ArrayList<>();
 
@@ -57,9 +60,17 @@ public class Shop extends BaseTimeEntity {
         this.thumbnailImage = thumbnailImage;
         this.shopLink = shopLink;
         this.location = location;
+        this.viewCount = 0L;
     }
 
     public void changeThumbnailImage(String url) {
         this.thumbnailImage = url;
+    }
+
+    public void increaseViewCount() {
+        if (this.viewCount == null) {
+            this.viewCount = 0L;
+        }
+        this.viewCount++;
     }
 }
