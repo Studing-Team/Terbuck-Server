@@ -18,13 +18,17 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class S3ImageService {
+
+    private static final Pattern THUMBNAIL_FILE_PATTERN = Pattern.compile(".*/1\\.[^/]+$");
 
     private final S3Client s3Client;
     private final ShopRepository shopRepository;
@@ -38,6 +42,16 @@ public class S3ImageService {
     private String region;
 
     private static final String STUDENTID_FOLDER_NAME = "studentID";
+
+    private record ShopImageUpdateResult(String shopName, boolean success, boolean thumbnailUpdated, int imageCount, String reason) {
+        static ShopImageUpdateResult success(String shopName, boolean thumbnailUpdated, int imageCount) {
+            return new ShopImageUpdateResult(shopName, true, thumbnailUpdated, imageCount, null);
+        }
+
+        static ShopImageUpdateResult failure(String shopName, String reason) {
+            return new ShopImageUpdateResult(shopName, false, false, 0, reason);
+        }
+    }
 
     public String uploadStudentIDImage(MultipartFile file) {
         try {
@@ -77,6 +91,14 @@ public class S3ImageService {
 
         ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
 
+        int folderCount = listResponse.commonPrefixes().size();
+        int successCount = 0;
+        int failureCount = 0;
+        int thumbnailUpdatedCount = 0;
+        int totalImageCount = 0;
+
+        log.info("Starting shop image sync. university={}, prefix={}, folderCount={}", university.getName(), universityPrefix, folderCount);
+
         // CommonPrefixes: 폴더들 (업체 폴더 경로들)
         for (CommonPrefix commonPrefix : listResponse.commonPrefixes()) {
             String shopFolderKey = commonPrefix.prefix(); // 예: shop/광운대학교/국수천왕/
@@ -86,11 +108,28 @@ public class S3ImageService {
             if (parts.length < 3) continue;
             String shopName = parts[2];
 
-            updateShopImages(university, shopName);
+            ShopImageUpdateResult result = updateShopImages(university, shopName);
+            if (result.success()) {
+                successCount++;
+                totalImageCount += result.imageCount();
+                if (result.thumbnailUpdated()) {
+                    thumbnailUpdatedCount++;
+                }
+                log.info("Shop image sync success. university={}, shopName={}, imageCount={}, thumbnailUpdated={}",
+                        university.getName(), result.shopName(), result.imageCount(), result.thumbnailUpdated());
+                continue;
+            }
+
+            failureCount++;
+            log.warn("Shop image sync failed. university={}, shopName={}, reason={}",
+                    university.getName(), result.shopName(), result.reason());
         }
+
+        log.info("Finished shop image sync. university={}, folderCount={}, successCount={}, failureCount={}, thumbnailUpdatedCount={}, totalImageCount={}",
+                university.getName(), folderCount, successCount, failureCount, thumbnailUpdatedCount, totalImageCount);
     }
 
-    private void updateShopImages(University university, String shopName) {
+    private ShopImageUpdateResult updateShopImages(University university, String shopName) {
         String prefix = String.format("shop/%s/%s/", university.getName(), shopName);
 
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
@@ -100,7 +139,15 @@ public class S3ImageService {
 
         ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
 
-        Shop shop = shopRepository.findByUnivAndName(university, shopName);
+        Shop shop;
+        try {
+            shop = shopRepository.findByUnivAndName(university, shopName);
+        } catch (EntityNotFoundException e) {
+            return ShopImageUpdateResult.failure(shopName, "SHOP_NOT_FOUND_IN_DB");
+        }
+
+        int imageCount = 0;
+        boolean thumbnailUpdated = false;
 
         for (S3Object obj : listResponse.contents()) {
             if (obj.key().endsWith("/")) continue;
@@ -108,11 +155,19 @@ public class S3ImageService {
             String url = getFileUrl(obj.key());
             ShopImage image = new ShopImage(url);
             image.changeShop(shop);
+            imageCount++;
 
-            if (obj.key().endsWith("1.png")) {
+            if (THUMBNAIL_FILE_PATTERN.matcher(obj.key()).matches()) {
                 shop.changeThumbnailImage(url); // shop 객체에 thumbnail 필드 설정
+                thumbnailUpdated = true;
             }
         }
+
+        if (imageCount == 0) {
+            return ShopImageUpdateResult.failure(shopName, "NO_IMAGE_FILES_IN_S3_FOLDER");
+        }
+
+        return ShopImageUpdateResult.success(shopName, thumbnailUpdated, imageCount);
     }
 
     public void updateAllPartnershipImagesByUniversity(Long universityId) {

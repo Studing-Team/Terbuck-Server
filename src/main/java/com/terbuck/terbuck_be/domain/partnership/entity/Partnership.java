@@ -31,7 +31,7 @@ public class Partnership extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Institution institution;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String detail;
 
     private String snsLink;
