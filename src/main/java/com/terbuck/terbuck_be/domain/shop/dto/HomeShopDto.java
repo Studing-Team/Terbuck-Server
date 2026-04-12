@@ -13,14 +13,16 @@ public class HomeShopDto {
     private ShopCategory category;
     private String name;
     private Double averageRating;
+    private Long viewCount;
     private String address;
     private List<BenefitDto> benefitList = new ArrayList<>();
 
-    public HomeShopDto(Long shopId, ShopCategory category, String name, Double averageRating) {
+    public HomeShopDto(Long shopId, ShopCategory category, String name, Double averageRating, Long viewCount) {
         this.shopId = shopId;
         this.category = category;
         this.name = name;
         this.averageRating = averageRating;
+        this.viewCount = viewCount;
     }
 
     public static HomeShopDto of(Shop shop) {
@@ -29,7 +31,8 @@ public class HomeShopDto {
                 shop.getId(),
                 shop.getCategory(),
                 shop.getName(),
-                shop.getAverageRating()
+                shop.getAverageRating(),
+                shop.getViewCount()
         );
 
         String address = Address.StringOf(shop.getAddress());

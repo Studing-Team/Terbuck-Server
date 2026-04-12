@@ -69,6 +69,7 @@ public class ShopService {
 
     public ShopResponse getShop(Long shopId) {
         Shop shop = repository.findById(shopId);
+        shop.increaseViewCount();
         return ShopResponse.of(shop);
     }
 

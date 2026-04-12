@@ -47,6 +47,9 @@ public class Shop extends BaseTimeEntity {
     @Column(nullable = false)
     private Long ratingCount = 0L;
 
+    @Column(nullable = false)
+    private Long viewCount = 0L;
+
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benefit> benefitList = new ArrayList<>();
 
@@ -67,6 +70,7 @@ public class Shop extends BaseTimeEntity {
         this.location = location;
         this.totalRatingScore = 0L;
         this.ratingCount = 0L;
+        this.viewCount = 0L;
     }
 
     public void changeThumbnailImage(String url) {
@@ -92,5 +96,12 @@ public class Shop extends BaseTimeEntity {
         return BigDecimal.valueOf(totalRatingScore)
                 .divide(BigDecimal.valueOf(ratingCount), 1, RoundingMode.HALF_UP)
                 .doubleValue();
+    }
+
+    public void increaseViewCount() {
+        if (this.viewCount == null) {
+            this.viewCount = 0L;
+        }
+        this.viewCount++;
     }
 }
