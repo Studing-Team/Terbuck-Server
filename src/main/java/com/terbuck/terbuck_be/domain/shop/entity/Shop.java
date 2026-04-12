@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,12 @@ public class Shop extends BaseTimeEntity {
     private Location location;
 
     @Column(nullable = false)
+    private Long totalRatingScore = 0L;
+
+    @Column(nullable = false)
+    private Long ratingCount = 0L;
+
+    @Column(nullable = false)
     private Long viewCount = 0L;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -60,11 +68,34 @@ public class Shop extends BaseTimeEntity {
         this.thumbnailImage = thumbnailImage;
         this.shopLink = shopLink;
         this.location = location;
+        this.totalRatingScore = 0L;
+        this.ratingCount = 0L;
         this.viewCount = 0L;
     }
 
     public void changeThumbnailImage(String url) {
         this.thumbnailImage = url;
+    }
+
+    public void addRating(int score) {
+        if (this.totalRatingScore == null) {
+            this.totalRatingScore = 0L;
+        }
+        if (this.ratingCount == null) {
+            this.ratingCount = 0L;
+        }
+        this.totalRatingScore += score;
+        this.ratingCount++;
+    }
+
+    public Double getAverageRating() {
+        if (ratingCount == null || ratingCount == 0) {
+            return 0.0;
+        }
+
+        return BigDecimal.valueOf(totalRatingScore)
+                .divide(BigDecimal.valueOf(ratingCount), 1, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     public void increaseViewCount() {

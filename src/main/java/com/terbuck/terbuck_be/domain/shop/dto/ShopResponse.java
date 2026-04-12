@@ -12,6 +12,8 @@ public class ShopResponse {
 
     private String name;
     private String shopLink;
+    private Double averageRating;
+    private Long ratingCount;
     private List<String> imageList = new ArrayList<>();
     private String address;
     private Integer benefitCount;
@@ -28,6 +30,8 @@ public class ShopResponse {
                 shop.getName(),
                 shop.getShopLink()
         );
+        shopResponse.setAverageRating(shop.getAverageRating());
+        shopResponse.setRatingCount(shop.getRatingCount());
 
         for (Image image : shop.getImageList()) {
             shopResponse.imageList.add(image.getImageURL());

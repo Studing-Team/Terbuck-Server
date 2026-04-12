@@ -12,14 +12,16 @@ public class HomeShopDto {
     private Long shopId;
     private ShopCategory category;
     private String name;
+    private Double averageRating;
     private Long viewCount;
     private String address;
     private List<BenefitDto> benefitList = new ArrayList<>();
 
-    public HomeShopDto(Long shopId, ShopCategory category, String name, Long viewCount) {
+    public HomeShopDto(Long shopId, ShopCategory category, String name, Double averageRating, Long viewCount) {
         this.shopId = shopId;
         this.category = category;
         this.name = name;
+        this.averageRating = averageRating;
         this.viewCount = viewCount;
     }
 
@@ -29,6 +31,7 @@ public class HomeShopDto {
                 shop.getId(),
                 shop.getCategory(),
                 shop.getName(),
+                shop.getAverageRating(),
                 shop.getViewCount()
         );
 

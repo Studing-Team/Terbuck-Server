@@ -3,14 +3,16 @@ package com.terbuck.terbuck_be.domain.shop.controller;
 import com.terbuck.terbuck_be.common.dto.SuccessMessage;
 import com.terbuck.terbuck_be.common.dto.SuccessStatusResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
-import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
+import com.terbuck.terbuck_be.domain.shop.dto.ShopRatingRequest;
+import com.terbuck.terbuck_be.domain.shop.dto.ShopRatingResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
 import com.terbuck.terbuck_be.domain.shop.entity.HomeCategory;
 import com.terbuck.terbuck_be.domain.shop.entity.Location;
 import com.terbuck.terbuck_be.domain.shop.entity.ShopCategory;
 import com.terbuck.terbuck_be.domain.shop.service.ShopService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,7 +49,7 @@ public class ShopController {
             categoryList.add(ShopCategory.주점);
         }
 
-        if ( homeCategory == HomeCategory.이용하기) {
+        if (homeCategory == HomeCategory.이용하기) {
             categoryList.add(ShopCategory.운동);
             categoryList.add(ShopCategory.문화);
             categoryList.add(ShopCategory.병원);
@@ -86,5 +88,16 @@ public class ShopController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessStatusResponse.of(SuccessMessage.ID_SHOP_GET_SUCCESS, shopResponse));
+    }
+
+    @PostMapping("/{shop_id}/rating")
+    public ResponseEntity<SuccessStatusResponse<ShopRatingResponse>> rateShop(
+            @PathVariable(name = "shop_id") Long shopId,
+            @RequestBody @Valid ShopRatingRequest shopRatingRequest) {
+        ShopRatingResponse shopRatingResponse = shopService.rateShop(shopId, shopRatingRequest.getScore());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessStatusResponse.of(SuccessMessage.SHOP_RATING_UPDATE_SUCCESS, shopRatingResponse));
     }
 }

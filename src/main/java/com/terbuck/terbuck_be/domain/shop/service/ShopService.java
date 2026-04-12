@@ -6,6 +6,7 @@ import com.terbuck.terbuck_be.domain.university.entity.University;
 import com.terbuck.terbuck_be.domain.university.repository.UniversityRepository;
 import com.terbuck.terbuck_be.domain.shop.dto.HomeShopDto;
 import com.terbuck.terbuck_be.domain.shop.dto.MapShopDto;
+import com.terbuck.terbuck_be.domain.shop.dto.ShopRatingResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopListResponse;
 import com.terbuck.terbuck_be.domain.shop.dto.ShopResponse;
 import com.terbuck.terbuck_be.domain.shop.entity.Benefit;
@@ -70,6 +71,12 @@ public class ShopService {
         Shop shop = repository.findById(shopId);
         shop.increaseViewCount();
         return ShopResponse.of(shop);
+    }
+
+    public ShopRatingResponse rateShop(Long shopId, Integer score) {
+        Shop shop = repository.findById(shopId);
+        shop.addRating(score);
+        return ShopRatingResponse.of(shop);
     }
 
     public Shop findRandomShop(University university, ShopCategory category) {
